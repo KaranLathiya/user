@@ -1,25 +1,24 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"user/model/dto"
+	"github.com/spf13/viper"
+)
 
-type Config struct {
-	DBDriver      string `mapstructure:"DB_DRIVER"`
-	DBSource      string `mapstructure:"DB_SOURCE"`
-	ServerAddress string `mapstructure:"SERVER_ADDRESS"`
-}
+var ConfigVal dto.Config
 
-func LoadConfig(path string) (config Config, err error) {
+func LoadConfig(path string) error {
 	viper.AddConfigPath(path)
-	viper.SetConfigName("app")
+	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
 
 	viper.AutomaticEnv()
 
-	err = viper.ReadInConfig()
+	err := viper.ReadInConfig()
 	if err != nil {
-		return
+		return err
 	}
 
-	err = viper.Unmarshal(&config)
-	return
+	err = viper.Unmarshal(&ConfigVal)
+	return err
 }

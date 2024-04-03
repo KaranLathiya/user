@@ -3,16 +3,15 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"os"
-	"go-structure/config"
-	"go-structure/controller"
-	"go-structure/database"
-	"go-structure/repository"
-	"go-structure/routes"
+	"user/config"
+	"user/controller"
+	"user/database"
+	"user/repository"
+	"user/routes"
 )
 
 func main() {
-	_, err := config.LoadConfig("./config")
+	err := config.LoadConfig("../config")
 	if err != nil {
 		panic(fmt.Sprintf("cannot load config: %v", err))
 	}
@@ -22,6 +21,7 @@ func main() {
 	controllers := controller.InitControllers(repos)
 	router := routes.IntializeRouter(controllers)
 	http.Handle("/", router)
-	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	fmt.Println("server started")
+	http.ListenAndServe(":"+config.ConfigVal.Port, nil)
 
 }
