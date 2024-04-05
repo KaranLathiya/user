@@ -10,7 +10,7 @@ import (
 
 func StoreOTP(db *sql.DB, signup request.Signup, otp string, eventType string) error {
 	var err error
-	if signup.EventType == "email" {
+	if signup.LoginType == "email" || signup.LoginType == "google_login"{
 		_, err = db.Exec("INSERT INTO public.otp (email,otp,expires_at,event_type) VALUES ($1,$2,$3,$4)", signup.Email, otp, utils.CurrentUTCTime(5), eventType)
 	} else {
 		_, err = db.Exec("INSERT INTO public.otp (phone_number,country_code,otp,expires_at,event_type) VALUES ($1,$2,$3,$4,$5)", signup.PhoneNumber, signup.CountryCode, otp, utils.CurrentUTCTime(5), eventType)

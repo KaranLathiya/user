@@ -56,7 +56,7 @@ func ErrorMessageResponse(w http.ResponseWriter, err error) {
 	w.Write(response)
 }
 
-func CreateCustomError(errorMessage string, statusCode int, invalidData []InvalidData) error {
+func CreateCustomError(errorMessage string, statusCode int, invalidData ...InvalidData) error {
 	return CustomError{
 		StatusCode:   statusCode,
 		ErrorMessage: errorMessage,
@@ -65,12 +65,16 @@ func CreateCustomError(errorMessage string, statusCode int, invalidData []Invali
 }
 
 var (
-	UnmarshalError      = CreateCustomError("Error while unmarshling data.", http.StatusUnauthorized, nil)
-	InternalServerError = CreateCustomError("Internal Server Error.", http.StatusInternalServerError, nil)
-	OTPGenerateError    = CreateCustomError("Error at generating OTP.", http.StatusInternalServerError, nil)
-	BcryptError         = CreateCustomError("Error at bcypting.", http.StatusInternalServerError, nil)
-	SendEmailError      = CreateCustomError("Error at sending email.", http.StatusInternalServerError, nil)
-	SendMessageError    = CreateCustomError("Error at sending message.", http.StatusInternalServerError, nil)
+	UnmarshalError      = CreateCustomError("Error while unmarshling data.", http.StatusUnauthorized)
+	InternalServerError = CreateCustomError("Internal Server Error.", http.StatusInternalServerError)
+	OTPGenerateError    = CreateCustomError("Error at generating OTP.", http.StatusInternalServerError)
+	BcryptError         = CreateCustomError("Error at bcypting.", http.StatusInternalServerError)
+	SendEmailError      = CreateCustomError("Error at sending email.", http.StatusInternalServerError)
+	SendMessageError    = CreateCustomError("Error at sending message.", http.StatusInternalServerError)
+	ExpiredOTP          = CreateCustomError("OTP expired", http.StatusGone)
+	InvalidOTP          = CreateCustomError("OTP is invalid", http.StatusUnauthorized)
+	UserAlreadyExist    = CreateCustomError("User already exist", http.StatusUnauthorized)
+	UserDoesNotExist    = CreateCustomError("User does not exist", http.StatusUnauthorized)
 )
 
 // func DatabaseError(err error) error {

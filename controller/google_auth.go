@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"user/config"
+	"user/constant"
 	"user/model/request"
 	"user/model/response"
 	"user/utils"
@@ -30,15 +31,17 @@ func (c *UserController) GoogleCallback(w http.ResponseWriter, r *http.Request) 
 		RedirectURI:  config.ConfigVal.GooglAuth.RedirectURL,
 		GrantType:    "authorization_code",
 	}
-	var googleAccessTokenResponse response.GoogleAccessTokenResponse
-	err := utils.ExternalURLCall("POST", "https://oauth2.googleapis.com/token", googleAccessTokenRequest, googleAccessTokenResponse)
+
+	var bodyDataResponse map[string]interface{}
+
+	bodyDataResponse, err := utils.ExternalURLCall("POST", "https://oauth2.googleapis.com/token", googleAccessTokenRequest, bodyDataResponse)
 	if err != nil {
-		fmt.Println("sdf")
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	var googleUserInfo response.GoogleUserInfo
-	err = utils.ExternalURLCall("GET", "https://www.googleapis.com/oauth2/v3/userinfo?access_token="+googleAccessTokenResponse.AccessToken, nil, googleUserInfo)
+	accessToken := bodyDataResponse["access_token"]
+	fmt.Println(accessToken)
+	bodyDataResponse, err = utils.ExternalURLCall("GET", "https://www.googleapis.com/oauth2/v3/userinfo?access_token="+accessToken.(string), nil, bodyDataResponse)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
@@ -54,20 +57,27 @@ func (c *UserController) GoogleCallback(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	signup := request.Signup{
-		FirstName: googleUserInfo.GivenName,
-		LastName:  googleUserInfo.FamilyName,
-		Email:     googleUserInfo.Email,
-		EventType: "google",
+		FirstName: bodyDataResponse["given_name"].(string),
+		LastName:  bodyDataResponse["family_name"].(string),
+		Email:     bodyDataResponse["email"].(string),
+		LoginType: "google_login",
 	}
-	err = c.repo.StoreOTP(signup, hashedOTP, "signup")
+	err = c.repo.StoreOTP(signup, hashedOTP, "google_login")
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
 	subject := "OTP for login/signup:"
-	err = utils.SendOTPEmail(signup.Email, otp, subject)
-	if err != nil {
-		error_handling.ErrorMessageResponse(w, err)
-		return
+	go utils.SendOTPEmail(signup.Email, otp, subject)
+	// if err != nil {
+	// 	error_handling.ErrorMessageResponse(w, err)
+	// 	return
+	// }
+	googleInfo := response.GoogleUserInfo{
+		FirstName: bodyDataResponse["given_name"].(string),
+		LastName:  bodyDataResponse["family_name"].(string),
+		Email:     bodyDataResponse["email"].(string),
+		Message:   constant.OTP_SENT,
 	}
+	utils.SuccessMessageResponse(w, 200, googleInfo)
 }

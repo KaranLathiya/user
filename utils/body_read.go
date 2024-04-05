@@ -11,22 +11,23 @@ import (
 	"github.com/gookit/validate"
 )
 
-func BodyRead(reader io.ReadCloser, bodyData interface{}) error {
+func BodyReadAndValidate(reader io.ReadCloser, bodyData interface{},addValidationRules map[string]string) error {
 	body, err := io.ReadAll(reader)
 	if err != nil {
-		return error_handling.CreateCustomError(err.Error(), http.StatusBadRequest, nil)
+		return error_handling.CreateCustomError(err.Error(), http.StatusBadRequest)
 	}
 	err = json.Unmarshal(body, &bodyData)
 	if err != nil {
 		return error_handling.UnmarshalError
 	}
-	err = ValidateStruct(bodyData)
+	err = ValidateStruct(bodyData,addValidationRules)
 	return err
 }
 
-func ValidateStruct(bodyData interface{}) error {
+func ValidateStruct(bodyData interface{},addValidationRules map[string]string) error {
 	var errorMessage []string
 	validator := validate.Struct(bodyData)
+	validator.StringRules(addValidationRules)
 	if !(validator.Validate()) {
 		var invalidDataArray []error_handling.InvalidData
 		errors := validator.Errors.All()
@@ -39,7 +40,7 @@ func ValidateStruct(bodyData interface{}) error {
 			invalidDataArray = append(invalidDataArray, invalidData)
 			errorMessage = append(errorMessage, key)
 		}
-		return error_handling.CreateCustomError("Error in field:"+strings.Join(errorMessage, ","), http.StatusBadRequest, invalidDataArray)
+		return error_handling.CreateCustomError("Error in field:"+strings.Join(errorMessage, ","), http.StatusBadRequest, invalidDataArray...)
 	}
 	return nil
 }
