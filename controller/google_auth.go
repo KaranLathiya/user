@@ -10,11 +10,7 @@ import (
 	"user/utils"
 
 	error_handling "user/error"
-
-	"golang.org/x/oauth2"
 )
-
-var Oauth2Config oauth2.Config
 
 func (c *UserController) GoogleAuth(w http.ResponseWriter, r *http.Request) {
 	authURL := "https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=" + config.ConfigVal.GooglAuth.RedirectURL + "&client_id=" + config.ConfigVal.GooglAuth.ClientID + ""
@@ -56,19 +52,19 @@ func (c *UserController) GoogleCallback(w http.ResponseWriter, r *http.Request) 
 		error_handling.ErrorMessageResponse(w, error_handling.BcryptError)
 		return
 	}
-	signup := request.Signup{
-		FirstName: bodyDataResponse["given_name"].(string),
-		LastName:  bodyDataResponse["family_name"].(string),
+	storeOTP := request.StoreOTP{
 		Email:     bodyDataResponse["email"].(string),
+		EventType: "google_login",
 		LoginType: "google_login",
+		HashedOTP: hashedOTP,
 	}
-	err = c.repo.StoreOTP(signup, hashedOTP, "google_login")
+	err = c.repo.StoreOTP(storeOTP)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
 	subject := "OTP for login/signup:"
-	go utils.SendOTPEmail(signup.Email, otp, subject)
+	go utils.SendOTPEmail(bodyDataResponse["email"].(string), otp, subject)
 	// if err != nil {
 	// 	error_handling.ErrorMessageResponse(w, err)
 	// 	return

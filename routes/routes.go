@@ -13,6 +13,7 @@ func IntializeRouter(controllers *controller.UserController) *chi.Mux {
 	router.Route("/", func(r chi.Router) {
 		r.Use(middleware.HandleCORS)
 		r.Post("/signup", controllers.Signup)
+		r.Post("/login", controllers.Login)
 
 		r.Route("/auth", func(r chi.Router) {
 			r.Get("/google", controllers.GoogleAuth)

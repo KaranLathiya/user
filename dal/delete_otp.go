@@ -27,6 +27,5 @@ func DeleteOTPs(db *sql.DB, verifyOTP request.VerifyOTP) error {
 	if err != nil {
 		return error_handling.InternalServerError
 	}
-	fmt.Println("donne")
 	return nil
 }

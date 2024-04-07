@@ -65,16 +65,20 @@ func CreateCustomError(errorMessage string, statusCode int, invalidData ...Inval
 }
 
 var (
-	UnmarshalError      = CreateCustomError("Error while unmarshling data.", http.StatusUnauthorized)
-	InternalServerError = CreateCustomError("Internal Server Error.", http.StatusInternalServerError)
-	OTPGenerateError    = CreateCustomError("Error at generating OTP.", http.StatusInternalServerError)
-	BcryptError         = CreateCustomError("Error at bcypting.", http.StatusInternalServerError)
-	SendEmailError      = CreateCustomError("Error at sending email.", http.StatusInternalServerError)
-	SendMessageError    = CreateCustomError("Error at sending message.", http.StatusInternalServerError)
-	ExpiredOTP          = CreateCustomError("OTP expired", http.StatusGone)
-	InvalidOTP          = CreateCustomError("OTP is invalid", http.StatusUnauthorized)
-	UserAlreadyExist    = CreateCustomError("User already exist", http.StatusUnauthorized)
-	UserDoesNotExist    = CreateCustomError("User does not exist", http.StatusUnauthorized)
+	UnmarshalError       = CreateCustomError("Error while unmarshling data.", http.StatusUnauthorized)
+	InternalServerError  = CreateCustomError("Internal Server Error.", http.StatusInternalServerError)
+	OTPGenerateError     = CreateCustomError("Error at generating OTP.", http.StatusInternalServerError)
+	BcryptError          = CreateCustomError("Error at bcypting.", http.StatusInternalServerError)
+	SendEmailError       = CreateCustomError("Error at sending email.", http.StatusInternalServerError)
+	SendMessageError     = CreateCustomError("Error at sending message.", http.StatusInternalServerError)
+	ExpiredOTP           = CreateCustomError("OTP expired.", http.StatusGone)
+	InvalidOTP           = CreateCustomError("OTP is invalid.", http.StatusBadRequest)
+	UserAlreadyExist     = CreateCustomError("User already exist.", http.StatusBadRequest)
+	UserDoesNotExist     = CreateCustomError("User does not exist.", http.StatusBadRequest)
+	HeaderdataMisssing   = CreateCustomError("Required header not found.", http.StatusBadRequest)
+	UsernameAlreadyTaken = CreateCustomError("Username already taken.", http.StatusBadRequest)
+	InvalidDetails       = CreateCustomError("Invalid details provided.", http.StatusBadRequest)
+	AlreadyBlocked       = CreateCustomError("Already blocked.", http.StatusBadRequest)
 )
 
 // func DatabaseError(err error) error {
