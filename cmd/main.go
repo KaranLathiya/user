@@ -19,7 +19,7 @@ func main() {
 	defer db.Close()
 	repos := repository.InitRepositories(db)
 	controllers := controller.InitControllers(repos)
-	router := routes.InitializeRouter(controllers)
+	router := routes.IntializeRouter(controllers)
 	http.Handle("/", router)
 	fmt.Println("server started")
 	http.ListenAndServe(":"+config.ConfigVal.Port, nil)
