@@ -74,7 +74,7 @@ var (
 	ExpiredOTP           = CreateCustomError("OTP expired.", http.StatusGone)
 	InvalidOTP           = CreateCustomError("OTP is invalid.", http.StatusBadRequest)
 	UserAlreadyExist     = CreateCustomError("User already exist.", http.StatusBadRequest)
-	UserDoesNotExist     = CreateCustomError("User does not exist.", http.StatusBadRequest)
+	UserDoesNotExist     = CreateCustomError("User does not exist.", http.StatusNotFound)
 	HeaderdataMisssing   = CreateCustomError("Required header not found.", http.StatusBadRequest)
 	UsernameAlreadyTaken = CreateCustomError("Username already taken.", http.StatusBadRequest)
 	InvalidDetails       = CreateCustomError("Invalid details provided.", http.StatusBadRequest)

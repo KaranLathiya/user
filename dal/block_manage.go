@@ -23,7 +23,7 @@ func BlockUser(db *sql.DB, blockUser request.BlockUser, userID string) error {
 				return error_handling.AlreadyBlocked
 			case "23503":
 				// foreign key constraint violation
-				return error_handling.InvalidDetails
+				return error_handling.UserDoesNotExist
 			}
 			return error_handling.InternalServerError
 		}
@@ -42,13 +42,13 @@ func UnblockUser(db *sql.DB, blockedUser request.BlockUser, userID string) error
 		return error_handling.InternalServerError
 	}
 	if rowsAffected == 0 {
-		return error_handling.InvalidDetails
+		return error_handling.UserDoesNotExist
 	}
 	return nil
 }
 
 func BlockedUserList(db *sql.DB, userID string) ([]response.BlockUserDetails,error) {
-	rows, err := db.Query("SELECT blocked,blocked_at FROM public.blocked_user WHERE blocker = $1 ", userID)
+	rows, err := db.Query("SELECT blocked,blocked_at FROM public.blocked_user WHERE blocker = $1 ORDER BY blocked_at DESC", userID)
 	if err != nil {
 		return nil,error_handling.InternalServerError
 	}
@@ -63,4 +63,15 @@ func BlockedUserList(db *sql.DB, userID string) ([]response.BlockUserDetails,err
 	}
 	defer rows.Close()
 	return blockedUserList,nil
+}
+
+func IsBlocked(db *sql.DB,userID string,id string) (bool, error){
+	err := db.QueryRow("SELECT blocked FROM public.blocked_user WHERE blocker = $1 AND blocked = $2", id, userID).Scan(&id)
+	if err != nil {
+		if err.Error() == "sql: no rows in result set"{
+			return false,nil
+		}
+		return false,error_handling.InternalServerError
+	}
+	return true,nil
 }

@@ -18,6 +18,11 @@ type Repository interface {
 	BlockUser(blockUser request.BlockUser, userID string) error
 	UnblockUser(blockedUser request.BlockUser, userID string) error
 	BlockedUserList(userID string) ([]response.BlockUserDetails, error)
+	IsBlocked(userID string, id string) (bool, error)
+	GetUsernameByID(id string) (string, error)
+	GetUserDetailsByID(id string) (response.UserDetails, error)
+	GetUserList(userID string, where []string, filterArgsList []interface{}, orderBy string, order string, limit int, offset int, blockedUserIDs []string) ([]response.User, error)
+	UserExistence(email string, phoneNumber string) (bool, error)
 }
 
 type Repositories struct {
@@ -67,4 +72,24 @@ func (r *Repositories) UnblockUser(blockedUser request.BlockUser, userID string)
 
 func (r *Repositories) BlockedUserList(userID string) ([]response.BlockUserDetails, error) {
 	return dal.BlockedUserList(r.db, userID)
+}
+
+func (r *Repositories) IsBlocked(userID string, id string) (bool, error) {
+	return dal.IsBlocked(r.db, userID, id)
+}
+
+func (r *Repositories) GetUsernameByID(id string) (string, error) {
+	return dal.GetUsernameByID(r.db, id)
+}
+
+func (r *Repositories) GetUserDetailsByID(id string) (response.UserDetails, error) {
+	return dal.GetUserDetailsByID(r.db, id)
+}
+
+func (r *Repositories) GetUserList(userID string, where []string, filterArgsList []interface{}, orderBy string, order string, limit int, offset int, blockedUserIDs []string) ([]response.User, error) {
+	return dal.GetUserList(r.db, userID, where, filterArgsList, orderBy, order, limit, offset, blockedUserIDs)
+}
+
+func (r *Repositories) UserExistence(email string, phoneNumber string) (bool, error) {
+	return dal.UserExistence(r.db, email, phoneNumber)
 }

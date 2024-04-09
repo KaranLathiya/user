@@ -39,3 +39,4 @@ func UserCreate(db *sql.DB, verifyOTP request.VerifyOTP) (string, error) {
 	}
 	return userID, nil
 }
+

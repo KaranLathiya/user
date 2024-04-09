@@ -8,5 +8,6 @@ type UpdateUserPrivacy struct {
 type UpdateUserNameDetails struct {
 	Firstname   string `json:"firstname" validate:"required|min_len:2|max_len:50" `
 	Lastname    string `json:"lastname" validate:"required|min_len:2|max_len:50" `
-	Username	string `json:"Username" validate:"required|min_len:2|max_len:50" `
+	Username	string `json:"username" validate:"required|min_len:2|max_len:50" `
 }
+

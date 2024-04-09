@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"user/config"
 	"user/constant"
 	"user/model/request"
@@ -12,14 +13,15 @@ import (
 	error_handling "user/error"
 )
 
-func (c *UserController) GoogleAuth(w http.ResponseWriter, r *http.Request) {
-	authURL := "https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=" + config.ConfigVal.GooglAuth.RedirectURL + "&client_id=" + config.ConfigVal.GooglAuth.ClientID + ""
-	googleAuthURL := response.GoogleAuthURL{AuthURL: authURL}
-	utils.SuccessMessageResponse(w, 200, googleAuthURL)
-}
+	func (c *UserController) GoogleAuth(w http.ResponseWriter, r *http.Request) {
+		authURL := "https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=" + config.ConfigVal.GooglAuth.RedirectURL + "&client_id=" + config.ConfigVal.GooglAuth.ClientID + ""
+		googleAuthURL := response.GoogleAuthURL{AuthURL: authURL}
+		utils.SuccessMessageResponse(w, 200, googleAuthURL)
+	}
 
 func (c *UserController) GoogleCallback(w http.ResponseWriter, r *http.Request) {
 	code := r.FormValue("code")
+	code = strings.ReplaceAll(code,"%2F","/")
 	googleAccessTokenRequest := request.GoogleAccessTokenRequest{
 		Code:         code,
 		ClientID:     config.ConfigVal.GooglAuth.ClientID,
