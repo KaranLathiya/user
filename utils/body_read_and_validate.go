@@ -11,7 +11,19 @@ import (
 	"github.com/gookit/validate"
 )
 
-func BodyReadAndValidate(reader io.ReadCloser, bodyData interface{},addValidationRules map[string]string) error {
+func BodyReadAndValidate(reader io.ReadCloser, bodyData interface{}, addValidationRules map[string]string) error {
+	err := BodyRead(reader, bodyData)
+	if err != nil {
+		return err
+	}
+	err = ValidateStruct(bodyData, addValidationRules)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func BodyRead(reader io.ReadCloser, bodyData interface{}) error {
 	body, err := io.ReadAll(reader)
 	if err != nil {
 		return error_handling.CreateCustomError(err.Error(), http.StatusBadRequest)
@@ -20,13 +32,12 @@ func BodyReadAndValidate(reader io.ReadCloser, bodyData interface{},addValidatio
 	if err != nil {
 		return error_handling.UnmarshalError
 	}
-	err = ValidateStruct(bodyData,addValidationRules)
-	return err
+	return nil
 }
 
-func ValidateStruct(bodyData interface{},addValidationRules map[string]string) error {
+func ValidateStruct(data interface{}, addValidationRules map[string]string) error {
 	var errorMessage []string
-	validator := validate.Struct(bodyData)
+	validator := validate.Struct(data)
 	validator.StringRules(addValidationRules)
 	if !(validator.Validate()) {
 		var invalidDataArray []error_handling.InvalidData

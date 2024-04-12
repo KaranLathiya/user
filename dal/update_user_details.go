@@ -10,7 +10,7 @@ import (
 )
 
 func UpdateUserPrivacy(db *sql.DB, updateUserPrivacy request.UpdateUserPrivacy, userID string) error {
-	result, err := db.Exec("UPDATE public.users SET privacy=$1,updated_at=$2 WHERE id=$3 	;", updateUserPrivacy.Privacy, utils.CurrentUTCTime(0), userID)
+	result, err := db.Exec("UPDATE public.users SET privacy=$1,updated_at=$2 WHERE id=$3 ;", updateUserPrivacy.Privacy, utils.CurrentUTCTime(0), userID)
 	if err != nil {
 		return error_handling.InternalServerError
 	}

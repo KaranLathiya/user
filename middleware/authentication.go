@@ -18,7 +18,7 @@ func Authentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authorizationKey := r.Header.Get("Auth-user")
 		if authorizationKey == "" {
-			error_handling.ErrorMessageResponse(w, error_handling.HeaderdataMisssing)
+			error_handling.ErrorMessageResponse(w, error_handling.HeaderDataMissing)
 			return
 		}
 		ctx := context.WithValue(r.Context(), UserCtxKey, authorizationKey)

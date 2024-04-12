@@ -11,7 +11,7 @@ type Repository interface {
 	StoreOTP(storeOTP request.StoreOTP) error
 	VerifyOTP(verifyOTP request.VerifyOTP) error
 	DeleteOTPs(verifyOTP request.VerifyOTP) error
-	UserCreate(verifyOTP request.VerifyOTP) (string, error)
+	CreateUser(verifyOTP request.VerifyOTP) (string, error)
 	GetUserID(verifyOTP request.VerifyOTP) (string, error)
 	UpdateUserPrivacy(updateUserPrivacy request.UpdateUserPrivacy, userID string) error
 	UpdateUserNameDetails(updateUserNameDetails request.UpdateUserNameDetails, userID string) error
@@ -46,8 +46,8 @@ func (r *Repositories) DeleteOTPs(verifyOTP request.VerifyOTP) error {
 	return dal.DeleteOTPs(r.db, verifyOTP)
 }
 
-func (r *Repositories) UserCreate(verifyOTP request.VerifyOTP) (string, error) {
-	return dal.UserCreate(r.db, verifyOTP)
+func (r *Repositories) CreateUser(verifyOTP request.VerifyOTP) (string, error) {
+	return dal.CreateUser(r.db, verifyOTP)
 }
 
 func (r *Repositories) GetUserID(verifyOTP request.VerifyOTP) (string, error) {

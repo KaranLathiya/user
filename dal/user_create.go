@@ -10,7 +10,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func UserCreate(db *sql.DB, verifyOTP request.VerifyOTP) (string, error) {
+func CreateUser(db *sql.DB, verifyOTP request.VerifyOTP) (string, error) {
 	// var filterArgsList []interface{}
 	var query string
 	var userID string
@@ -27,7 +27,7 @@ func UserCreate(db *sql.DB, verifyOTP request.VerifyOTP) (string, error) {
 	}
 	err = db.QueryRow(query).Scan(&userID)
 	if err != nil {
-		if dbErr, ok := err.(*pq.Error); ok {
+		if dbErr, ok := err.(*pq.Error); ok {	
 			errCode := dbErr.Code
 			switch errCode {
 			case "23505":

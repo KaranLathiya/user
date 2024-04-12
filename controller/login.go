@@ -41,9 +41,9 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	subject := "OTP for login: "
 	if login.LoginType == "email" {
-		go utils.SendOTPEmail(login.Email, otp, subject)
+		go utils.SendOTPEmail(*login.Email, otp, subject)
 	} else {
-		go utils.SendOTPPhone(login.CountryCode, login.PhoneNumber, otp, subject)
+		go utils.SendOTPPhone(*login.CountryCode, *login.PhoneNumber, otp, subject)
 	}
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)

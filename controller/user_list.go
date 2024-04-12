@@ -32,9 +32,9 @@ func (c *UserController) GetUserList(w http.ResponseWriter, r *http.Request) {
 		Offset:      offset,
 		Order:       order,
 		OrderBy:     orderBy,
-		Email:       email,
+		Email:       &email,
 		Fullname:    fullname,
-		PhoneNumber: phone,
+		PhoneNumber: &phone,
 	}
 
 	err := utils.ValidateStruct(userListParameter, nil)
@@ -92,5 +92,5 @@ func (c *UserController) GetUserList(w http.ResponseWriter, r *http.Request) {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	utils.SuccessMessageResponse(w, 200, userList[0])
+	utils.SuccessMessageResponse(w, 200, userList)
 }

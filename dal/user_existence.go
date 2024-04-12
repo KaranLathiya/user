@@ -12,10 +12,10 @@ import (
 func UserExistence(db *sql.DB, email string, phoneNumber string) (bool, error) {
 	var where []string
 	var filterArgsList []interface{}
-	if phoneNumber == "" {
+	if email != "" {
 		where = append(where, "email = ? ")
 		filterArgsList = append(filterArgsList, email)
-	} else if email == "" {
+	} else if phoneNumber != "" {
 		where = append(where, "phone_number = ?")
 		filterArgsList = append(filterArgsList, phoneNumber)
 	}

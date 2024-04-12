@@ -12,12 +12,12 @@ func InitializeRouter(controllers *controller.UserController) *chi.Mux {
 	router := chi.NewRouter()
 	router.Route("/", func(r chi.Router) {
 		r.Use(middleware.HandleCORS)
-		r.Post("/signup", controllers.Signup)
-		r.Post("/login", controllers.Login)
 
 		r.Route("/auth", func(r chi.Router) {
+			r.Post("/signup", controllers.Signup)
+			r.Post("/login", controllers.Login)
 			r.Get("/google", controllers.GoogleAuth)
-			r.Get("/google/callback", controllers.GoogleCallback)
+			r.Get("/google/login", controllers.GoogleCallback)
 		})
 
 		r.Post("/otp/verify", controllers.VerifyOTP)
@@ -37,7 +37,7 @@ func InitializeRouter(controllers *controller.UserController) *chi.Mux {
 				r.Get("/username", controllers.GetUsernameByID)
 				r.Get("/user-details", controllers.GetUserDetailsByID)
 			})
-			r.Get("/user-list",controllers.GetUserList)
+			r.Get("/user-list", controllers.GetUserList)
 		})
 
 		r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
