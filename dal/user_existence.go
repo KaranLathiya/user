@@ -9,17 +9,17 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func UserExistence(db *sql.DB, email string, phoneNumber string) (bool, error) {
+func UserExistence(db *sql.DB, email *string, phoneNumber *string) (bool, error) {
 	var where []string
 	var filterArgsList []interface{}
-	if email != "" {
+	if *email != "" {
 		where = append(where, "email = ? ")
 		filterArgsList = append(filterArgsList, email)
-	} else if phoneNumber != "" {
+	} else if *phoneNumber != "" {
 		where = append(where, "phone_number = ?")
 		filterArgsList = append(filterArgsList, phoneNumber)
 	}
-	query := fmt.Sprintf("SELECT id from public.otp WHERE %v", strings.Join(where, " AND "))
+	query := fmt.Sprintf("SELECT id from public.users WHERE %v", strings.Join(where, " AND "))
 	query = sqlx.Rebind(sqlx.DOLLAR, query)
 	// fmt.Println(query)
 	var id string

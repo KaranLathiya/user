@@ -14,15 +14,15 @@ type Repository interface {
 	CreateUser(verifyOTP request.VerifyOTP) (string, error)
 	GetUserID(verifyOTP request.VerifyOTP) (string, error)
 	UpdateUserPrivacy(updateUserPrivacy request.UpdateUserPrivacy, userID string) error
-	UpdateUserNameDetails(updateUserNameDetails request.UpdateUserNameDetails, userID string) error
+	UpdateBasicDetails(updateUserNameDetails request.UpdateUserNameDetails, userID string) error
 	BlockUser(blockUser request.BlockUser, userID string) error
 	UnblockUser(blockedUser request.BlockUser, userID string) error
 	BlockedUserList(userID string) ([]response.BlockUserDetails, error)
-	IsBlocked(userID string, id string) (bool, error)
-	GetUsernameByID(id string) (string, error)
-	GetUserDetailsByID(id string) (response.UserDetails, error)
-	GetUserList(userID string, where []string, filterArgsList []interface{}, orderBy string, order string, limit int, offset int, blockedUserIDs []string) ([]response.User, error)
-	UserExistence(email string, phoneNumber string) (bool, error)
+	GetIDByUsername(username string) (string, error)
+	GetCurrentUserDetailsByID(userID string) (response.UserDetails, error)
+	GetUserDetailsByID(id string, userID string) (response.UserDetails, error)
+	GetUserList(userID string, userListParameter request.UserListParameter) ([]response.User, error)
+	UserExistence(email *string, phoneNumber *string) (bool, error)
 }
 
 type Repositories struct {
@@ -58,8 +58,8 @@ func (r *Repositories) UpdateUserPrivacy(updateUserPrivacy request.UpdateUserPri
 	return dal.UpdateUserPrivacy(r.db, updateUserPrivacy, userID)
 }
 
-func (r *Repositories) UpdateUserNameDetails(updateUserNameDetails request.UpdateUserNameDetails, userID string) error {
-	return dal.UpdateUserNameDetails(r.db, updateUserNameDetails, userID)
+func (r *Repositories) UpdateBasicDetails(updateUserNameDetails request.UpdateUserNameDetails, userID string) error {
+	return dal.UpdateBasicDetails(r.db, updateUserNameDetails, userID)
 }
 
 func (r *Repositories) BlockUser(blockUser request.BlockUser, userID string) error {
@@ -74,22 +74,22 @@ func (r *Repositories) BlockedUserList(userID string) ([]response.BlockUserDetai
 	return dal.BlockedUserList(r.db, userID)
 }
 
-func (r *Repositories) IsBlocked(userID string, id string) (bool, error) {
-	return dal.IsBlocked(r.db, userID, id)
+func (r *Repositories) GetIDByUsername(username string) (string, error) {
+	return dal.GetIDByUsername(r.db, username)
 }
 
-func (r *Repositories) GetUsernameByID(id string) (string, error) {
-	return dal.GetUsernameByID(r.db, id)
+func (r *Repositories) GetUserDetailsByID(id string, userID string) (response.UserDetails, error) {
+	return dal.GetUserDetailsByID(r.db, id, userID)
 }
 
-func (r *Repositories) GetUserDetailsByID(id string) (response.UserDetails, error) {
-	return dal.GetUserDetailsByID(r.db, id)
+func (r *Repositories) GetCurrentUserDetailsByID(userID string) (response.UserDetails, error) {
+	return dal.GetCurrentUserDetailsByID(r.db, userID)
 }
 
-func (r *Repositories) GetUserList(userID string, where []string, filterArgsList []interface{}, orderBy string, order string, limit int, offset int, blockedUserIDs []string) ([]response.User, error) {
-	return dal.GetUserList(r.db, userID, where, filterArgsList, orderBy, order, limit, offset, blockedUserIDs)
+func (r *Repositories) GetUserList(userID string, userListParameter request.UserListParameter) ([]response.User, error) {
+	return dal.GetUserList(r.db, userID, userListParameter)
 }
 
-func (r *Repositories) UserExistence(email string, phoneNumber string) (bool, error) {
+func (r *Repositories) UserExistence(email *string, phoneNumber *string) (bool, error) {
 	return dal.UserExistence(r.db, email, phoneNumber)
 }

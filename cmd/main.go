@@ -23,5 +23,4 @@ func main() {
 	http.Handle("/", router)
 	fmt.Println("server started")
 	http.ListenAndServe(":"+config.ConfigVal.Port, nil)
-
 }

@@ -2,51 +2,83 @@ package controller
 
 import (
 	"net/http"
+	"user/constant"
 	error_handling "user/error"
 	"user/middleware"
+	"user/model/request"
 	"user/model/response"
 	"user/utils"
 
 	"github.com/go-chi/chi"
 )
 
-func (c *UserController) GetUsernameByID(w http.ResponseWriter, r *http.Request) {
+func (c *UserController) GetUserDetailsByUsername(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value(middleware.UserCtxKey).(string)
-	id := chi.URLParam(r, "id")
-	isBlocked, err := c.repo.IsBlocked(userID, id)
+	username := chi.URLParam(r, "username")
+	id, err := c.repo.GetIDByUsername(username)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	if !isBlocked {
-		username, err := c.repo.GetUsernameByID(id)
-		if err != nil {
-			error_handling.ErrorMessageResponse(w, err)
-			return
-		}
-		usernameResponse := response.Username{Username: username}
-		utils.SuccessMessageResponse(w, 200, usernameResponse)
+	userDetails, err := c.repo.GetUserDetailsByID(id, userID)
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	utils.SuccessMessageResponse(w, 200, response.Username{})
+	utils.SuccessMessageResponse(w, 200, userDetails)
 }
 
 func (c *UserController) GetUserDetailsByID(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value(middleware.UserCtxKey).(string)
 	id := chi.URLParam(r, "id")
-	isBlocked, err := c.repo.IsBlocked(userID, id)
+	userDetails, err := c.repo.GetUserDetailsByID(id, userID)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	if !isBlocked {
-		userDetails, err := c.repo.GetUserDetailsByID(id)
-		if err != nil {
-			error_handling.ErrorMessageResponse(w, err)
-			return
-		}
-		utils.SuccessMessageResponse(w, 200, userDetails)
-		return 
+	utils.SuccessMessageResponse(w, 200, userDetails)
+}
+
+func (c *UserController) GetCurrentUserDetails(w http.ResponseWriter, r *http.Request) {
+	userID := r.Context().Value(middleware.UserCtxKey).(string)
+	userDetails, err := c.repo.GetCurrentUserDetailsByID(userID)
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
+		return
 	}
-	utils.SuccessMessageResponse(w, 200, response.UserDetails{})
+	utils.SuccessMessageResponse(w, 200, userDetails)
+}
+
+func (c *UserController) UpdateUserPrivacy(w http.ResponseWriter, r *http.Request) {
+	userID := r.Context().Value(middleware.UserCtxKey).(string)
+	var updateUserPrivacy request.UpdateUserPrivacy
+	err := utils.BodyReadAndValidate(r.Body, &updateUserPrivacy, nil)
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
+		return
+	}
+	err = c.repo.UpdateUserPrivacy(updateUserPrivacy, userID)
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
+		return
+	}
+	successResponse := response.SuccessResponse{Message: constant.USER_DETAILS_UPDATED}
+	utils.SuccessMessageResponse(w, 200, successResponse)
+}
+
+func (c *UserController) UpdateBasicDetails(w http.ResponseWriter, r *http.Request) {
+	userID := r.Context().Value(middleware.UserCtxKey).(string)
+	var updateUserNameDetails request.UpdateUserNameDetails
+	err := utils.BodyReadAndValidate(r.Body, &updateUserNameDetails, nil)
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
+		return
+	}
+	err = c.repo.UpdateBasicDetails(updateUserNameDetails, userID)
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
+		return
+	}
+	successResponse := response.SuccessResponse{Message: constant.USER_DETAILS_UPDATED}
+	utils.SuccessMessageResponse(w, 200, successResponse)
 }

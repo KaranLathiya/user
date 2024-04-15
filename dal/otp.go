@@ -13,11 +13,14 @@ import (
 
 func StoreOTP(db *sql.DB, storeOTP request.StoreOTP) error {
 	var err error
+
 	if storeOTP.LoginType == "email" || storeOTP.LoginType == "google_login" {
-		_, err = db.Exec("INSERT INTO public.otp (email,otp,expires_at,event_type) VALUES ($1,$2,$3,$4)", storeOTP.Email, storeOTP.HashedOTP, utils.CurrentUTCTime(5), storeOTP.EventType)
+		storeOTP.CountryCode = nil
+		storeOTP.PhoneNumber = nil
 	} else {
-		_, err = db.Exec("INSERT INTO public.otp (phone_number,country_code,otp,expires_at,event_type) VALUES ($1,$2,$3,$4,$5)", storeOTP.PhoneNumber, storeOTP.CountryCode, storeOTP.HashedOTP, utils.CurrentUTCTime(5), storeOTP.EventType)
+		storeOTP.Email = nil
 	}
+	_, err = db.Exec("INSERT INTO public.otp (email,phone_number,country_code,otp,expires_at,event_type) VALUES ( $1 , $2 , $3 , $4 , $5 , $6 )", storeOTP.Email, storeOTP.PhoneNumber, storeOTP.CountryCode, storeOTP.HashedOTP, utils.CurrentUTCTime(5), storeOTP.EventType)
 	fmt.Println(err)
 	if err != nil {
 		return error_handling.InternalServerError
@@ -31,7 +34,7 @@ func VerifyOTP(db *sql.DB, verifyOTP request.VerifyOTP) error {
 	if verifyOTP.SignupMode == "email" || verifyOTP.SignupMode == "google_login" {
 		where = append(where, "email = ? ")
 		filterArgsList = append(filterArgsList, verifyOTP.Email)
-	} else if verifyOTP.SignupMode == "phone" {
+	} else if verifyOTP.SignupMode == "phone_number" {
 		where = append(where, "phone_number = ?", "country_code = ?")
 		filterArgsList = append(filterArgsList, verifyOTP.PhoneNumber, verifyOTP.CountryCode)
 	}
@@ -67,7 +70,7 @@ func DeleteOTPs(db *sql.DB, verifyOTP request.VerifyOTP) error {
 	if verifyOTP.EventType == "email" || verifyOTP.EventType == "google_login" {
 		where = append(where, "email = ? ")
 		filterArgsList = append(filterArgsList, verifyOTP.Email)
-	} else if verifyOTP.EventType == "phone" {
+	} else if verifyOTP.EventType == "phone_number" {
 		where = append(where, "phone_number = ?", "country_code = ?")
 		filterArgsList = append(filterArgsList, verifyOTP.PhoneNumber, verifyOTP.CountryCode)
 	}

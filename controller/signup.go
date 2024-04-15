@@ -16,7 +16,7 @@ func (c *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	userExistence, err := c.repo.UserExistence(*signup.Email, *signup.PhoneNumber)
+	userExistence, err := c.repo.UserExistence(signup.Email, signup.PhoneNumber)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
@@ -48,16 +48,16 @@ func (c *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	subject := "OTP for signup: "
-	if signup.LoginType == "email" {
-		go utils.SendOTPEmail(*signup.Email, otp, subject)
-	} else {
-		go utils.SendOTPPhone(*signup.CountryCode, *signup.PhoneNumber, otp, subject)
-	}
-	if err != nil {
-		error_handling.ErrorMessageResponse(w, err)
-		return
-	}
+	// subject := "OTP for signup: "
+	// if signup.LoginType == "email" {
+	// 	go utils.SendOTPEmail(*signup.Email, otp, subject)
+	// } else {
+	// 	go utils.SendOTPPhone(*signup.CountryCode, *signup.PhoneNumber, otp, subject)
+	// }
+	// if err != nil {
+	// 	error_handling.ErrorMessageResponse(w, err)
+	// 	return
+	// }
 	successResponse := response.SuccessResponse{Message: constant.OTP_SENT}
 	utils.SuccessMessageResponse(w, 200, successResponse)
 }

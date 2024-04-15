@@ -16,28 +16,34 @@ func InitializeRouter(controllers *controller.UserController) *chi.Mux {
 		r.Route("/auth", func(r chi.Router) {
 			r.Post("/signup", controllers.Signup)
 			r.Post("/login", controllers.Login)
-			r.Get("/google", controllers.GoogleAuth)
-			r.Get("/google/login", controllers.GoogleCallback)
+			r.Route("/google", func(r chi.Router) {
+				r.Get("/", controllers.GoogleAuth)
+				r.Get("/login", controllers.GoogleLogin)
+			})
 		})
 
 		r.Post("/otp/verify", controllers.VerifyOTP)
 
-		r.Route("/user", func(r chi.Router) {
+		r.Route("/user/profile", func(r chi.Router) {
 			r.Use(middleware.Authentication)
+			r.Get("/", controllers.GetCurrentUserDetails)
+			r.Put("/privacy", controllers.UpdateUserPrivacy)
+			r.Put("/basic", controllers.UpdateBasicDetails)
+		})
+
+		r.Route("/users", func(r chi.Router) {
+			r.Use(middleware.Authentication)
+			r.Get("/", controllers.GetUserList)
+			r.Get("/{id}/id", controllers.GetUserDetailsByID)
+			r.Get("/{username}/username", controllers.GetUserDetailsByUsername)
+
 			r.Route("/block", func(r chi.Router) {
-				r.Get("/", controllers.BlockUserList)
+				r.Get("/", controllers.BlockedUserList)
 				r.Post("/", controllers.BlockUser)
-				r.Delete("/{blocked}", controllers.UnblockUser)
 			})
-			r.Route("/profile", func(r chi.Router) {
-				r.Put("/privacy", controllers.UpdateUserPrivacy)
-				r.Put("/name-details", controllers.UpdateUserNameDetails)
-			})
-			r.Route("/{id}", func(r chi.Router) {
-				r.Get("/username", controllers.GetUsernameByID)
-				r.Get("/user-details", controllers.GetUserDetailsByID)
-			})
-			r.Get("/user-list", controllers.GetUserList)
+
+			r.Delete("/{blocked}/unblock", controllers.UnblockUser)
+
 		})
 
 		r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
@@ -50,5 +56,7 @@ func InitializeRouter(controllers *controller.UserController) *chi.Mux {
 		})
 
 	})
+
 	return router
+
 }

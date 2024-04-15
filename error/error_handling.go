@@ -12,6 +12,11 @@ func init() {
 	validate.Config(func(opt *validate.GlobalOption) {
 		opt.StopOnError = false
 	})
+	// validate.AddValidator("emailOrPhoneNumber", func(val any) bool {
+	// 	// do validate val ...
+		
+	// 	return true
+	// })
 	// validate.AddGlobalMessages(map[string]string{
 	// 	"minLength": "OO! {field} min length is %d",
 	// 	"required": "oh! the {field} is required",

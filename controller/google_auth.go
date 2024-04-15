@@ -19,7 +19,7 @@ func (c *UserController) GoogleAuth(w http.ResponseWriter, r *http.Request) {
 	utils.SuccessMessageResponse(w, 200, googleAuthURL)
 }
 
-func (c *UserController) GoogleCallback(w http.ResponseWriter, r *http.Request) {
+func (c *UserController) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 	code := r.FormValue("code")
 	code = strings.ReplaceAll(code, "%2F", "/")
 	googleAccessTokenRequest := request.GoogleAccessTokenRequest{
@@ -32,14 +32,14 @@ func (c *UserController) GoogleCallback(w http.ResponseWriter, r *http.Request) 
 
 	var bodyDataResponse map[string]interface{}
 
-	bodyDataResponse, err := utils.ExternalURLCall("POST", "https://oauth2.googleapis.com/token", googleAccessTokenRequest, bodyDataResponse)
+	bodyDataResponse, err := utils.ExternalURLCall("POST", constant.GOOGLE_ACCESS_TOKEN_REQUEST_URL , googleAccessTokenRequest, bodyDataResponse)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
 	accessToken := bodyDataResponse["access_token"]
 	fmt.Println(accessToken)
-	bodyDataResponse, err = utils.ExternalURLCall("GET", "https://www.googleapis.com/oauth2/v3/userinfo?access_token="+accessToken.(string), nil, bodyDataResponse)
+	bodyDataResponse, err = utils.ExternalURLCall("GET", constant.GOOGLE_INFO_REQUEST_URL+accessToken.(string), nil, bodyDataResponse)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
