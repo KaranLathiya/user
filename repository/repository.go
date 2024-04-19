@@ -23,6 +23,7 @@ type Repository interface {
 	GetUserDetailsByID(id string, userID string) (response.UserDetails, error)
 	GetUserList(userID string, userListParameter request.UserListParameter) ([]response.User, error)
 	UserExistence(email *string, phoneNumber *string) (bool, error)
+	GetUsersDetailsByIDs(userIDs []string) (map[string]response.UserDetails, error)
 }
 
 type Repositories struct {
@@ -92,4 +93,8 @@ func (r *Repositories) GetUserList(userID string, userListParameter request.User
 
 func (r *Repositories) UserExistence(email *string, phoneNumber *string) (bool, error) {
 	return dal.UserExistence(r.db, email, phoneNumber)
+}
+
+func (r *Repositories) GetUsersDetailsByIDs(userIDs []string) (map[string]response.UserDetails, error) {
+	return dal.GetUsersDetailsByIDs(r.db, userIDs)
 }

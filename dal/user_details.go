@@ -107,3 +107,21 @@ func UpdateBasicDetails(db *sql.DB, updateUserNameDetails request.UpdateUserName
 	}
 	return nil
 }
+
+func GetUsersDetailsByIDs(db *sql.DB, userID []string) (map[string]response.UserDetails, error) {
+	usersDetailsMap := make(map[string]response.UserDetails)
+
+	rows, err := db.Query("SELECT id,firstname,lastname,fullname,username FROM public.users WHERE id = ANY($1) ;", pq.Array(userID))
+	if err != nil {
+		return nil, error_handling.InternalServerError
+	}
+	for rows.Next() {
+		var userDetails response.UserDetails
+		err = rows.Scan(&userDetails.UserID, &userDetails.Firstname, &userDetails.Lastname, &userDetails.Fullname, &userDetails.Username)
+		if err != nil {
+			return nil, err
+		}
+		usersDetailsMap[userDetails.UserID] = userDetails
+	}
+	return usersDetailsMap, nil
+}

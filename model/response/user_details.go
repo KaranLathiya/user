@@ -14,12 +14,12 @@ type UserDetails struct {
 	Lastname    string `json:"lastname" `
 	Fullname    string `json:"fullname" `
 	Username    string `json:"username" `
-	Email       *string `json:"email" `
-	PhoneNumber *string `json:"phoneNumber" `
-	CountryCode *string `json:"countryCode" `
-	Privacy     string `json:"privacy" `
-	CreatedAt   string `json:"createdAt" `
-	UpdatedAt   *string `json:"updatedAt" `
+	Email       *string `json:"email,omitempty" `
+	PhoneNumber *string `json:"phoneNumber,omitempty" `
+	CountryCode *string `json:"countryCode,omitempty" `
+	Privacy     string `json:"privacy,omitempty" `
+	CreatedAt   string `json:"createdAt,omitempty" `
+	UpdatedAt   *string `json:"updatedAt,omitempty" `
 }
 
 type User struct {
@@ -32,4 +32,6 @@ type User struct {
 	PhoneNumber *string `json:"phoneNumber" `
 	CountryCode *string `json:"countryCode" `
 }
+
+
 

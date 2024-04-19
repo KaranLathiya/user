@@ -1,10 +1,11 @@
 package dto
 
 type Config struct {
-	Port     string   `mapstructure:"PORT"`
-	Database Database `mapstructure:",squash"`
-	SMTP     SMTP     `mapstructure:",squash"`
-	Twilio   Twilio   `mapstructure:",squash"`
+	Port      string     `mapstructure:"PORT"`
+	JWTKey    string     `mapstructure:"JWTKEY"`
+	Database  Database   `mapstructure:",squash"`
+	SMTP      SMTP       `mapstructure:",squash"`
+	Twilio    Twilio     `mapstructure:",squash"`
 	GooglAuth GoogleAuth `mapstructure:",squash"`
 }
 type Database struct {
@@ -24,9 +25,8 @@ type Twilio struct {
 	MessageFrom string `mapstructure:"TWILIO_MESSAGE_FROM"`
 }
 
-
 type GoogleAuth struct {
-	ClientSecret   string `mapstructure:"GOOGLE_AUTH_CLIENT_SECRET"`
-	ClientID   string `mapstructure:"GOOGLE_AUTH_CLIENT_ID"`
-	RedirectURL string `mapstructure:"GOOGLE_AUTH_REDIRECT_URL"`
+	ClientSecret string `mapstructure:"GOOGLE_AUTH_CLIENT_SECRET"`
+	ClientID     string `mapstructure:"GOOGLE_AUTH_CLIENT_ID"`
+	RedirectURL  string `mapstructure:"GOOGLE_AUTH_REDIRECT_URL"`
 }

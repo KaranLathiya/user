@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"user/constant"
 	error_handling "user/error"
@@ -81,4 +82,25 @@ func (c *UserController) UpdateBasicDetails(w http.ResponseWriter, r *http.Reque
 	}
 	successResponse := response.SuccessResponse{Message: constant.USER_DETAILS_UPDATED}
 	utils.SuccessMessageResponse(w, 200, successResponse)
+}
+
+func (c *UserController) GetUsersDetailsByIDs(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("called")
+	err := middleware.VerifyJWTToken(r.Header.Get("Authorization"), "User", "User details of organization")
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
+		return
+	}
+	var userIDs request.UserIDs
+	err = utils.BodyReadAndValidate(r.Body, &userIDs, nil)
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
+		return
+	}
+	usersDetails, err := c.repo.GetUsersDetailsByIDs(userIDs.UserIDs)
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
+		return
+	}
+	utils.SuccessMessageResponse(w, 200, usersDetails)
 }

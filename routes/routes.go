@@ -46,6 +46,8 @@ func InitializeRouter(controllers *controller.UserController) *chi.Mux {
 
 		})
 
+		r.Post("/users/details", controllers.GetUsersDetailsByIDs)
+
 		r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(405)
 			w.Write([]byte("wrong method"))

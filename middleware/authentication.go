@@ -19,7 +19,7 @@ func Authentication(next http.Handler) http.Handler {
 		authorizationKey := r.Header.Get("Auth-user")
 		if authorizationKey == "" {
 			error_handling.ErrorMessageResponse(w, error_handling.HeaderDataMissing)
-			return
+			return 
 		}
 		ctx := context.WithValue(r.Context(), UserCtxKey, authorizationKey)
 		next.ServeHTTP(w, r.WithContext(ctx))

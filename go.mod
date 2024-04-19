@@ -33,8 +33,10 @@ require (
 )
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-playground/validator/v10 v10.19.0
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/gookit/validate v1.5.2
 	github.com/gorilla/pat v1.0.2
 	github.com/hashicorp/hcl v1.0.0 // indirect
