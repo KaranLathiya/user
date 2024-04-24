@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"user/constant"
 	error_handling "user/error"
 	"user/model/request"
 	"user/model/response"
@@ -17,10 +18,10 @@ func GetUserID(db *sql.DB, verifyOTP request.VerifyOTP) (string, error) {
 	var where []string
 	var filterArgsList []interface{}
 	var userID string
-	if verifyOTP.SignupMode == "email" || verifyOTP.SignupMode == "google_login" {
+	if verifyOTP.SignupMode == constant.SIGNUP_MODE_EMAIL || verifyOTP.SignupMode == constant.SIGNUP_MODE_GOOGLE_LOGIN {
 		where = append(where, "email = ? ")
 		filterArgsList = append(filterArgsList, verifyOTP.Email)
-	} else if verifyOTP.SignupMode == "phone_number" {
+	} else if verifyOTP.SignupMode == constant.SIGNUP_MODE_PHONE_NUMBER{
 		where = append(where, "phone_number = ?", "country_code = ?")
 		filterArgsList = append(filterArgsList, verifyOTP.PhoneNumber, verifyOTP.CountryCode)
 	}
@@ -78,7 +79,7 @@ func GetCurrentUserDetailsByID(db *sql.DB, userID string) (response.UserDetails,
 }
 
 func UpdateUserPrivacy(db *sql.DB, updateUserPrivacy request.UpdateUserPrivacy, userID string) error {
-	result, err := db.Exec("UPDATE public.users SET privacy= $1 ,updated_at = $2 WHERE id = $3 ;", updateUserPrivacy.Privacy, utils.CurrentUTCTime(0), userID)
+	result, err := db.Exec("UPDATE public.users SET privacy= $1 ,updated_at = $2 WHERE id = $3 ;", updateUserPrivacy.Privacy, utils.AddMinutesToCurrentUTCTime(0), userID)
 	if err != nil {
 		return error_handling.InternalServerError
 	}
@@ -93,7 +94,7 @@ func UpdateUserPrivacy(db *sql.DB, updateUserPrivacy request.UpdateUserPrivacy, 
 }
 
 func UpdateBasicDetails(db *sql.DB, updateUserNameDetails request.UpdateUserNameDetails, userID string) error {
-	_, err := db.Exec("UPDATE public.users SET firstname = $1,lastname = $2, fullname = $3, username = $4, updated_at = $5 WHERE id = $6;", updateUserNameDetails.Firstname, updateUserNameDetails.Lastname, updateUserNameDetails.Firstname+" "+updateUserNameDetails.Lastname, updateUserNameDetails.Username, utils.CurrentUTCTime(0), userID)
+	_, err := db.Exec("UPDATE public.users SET firstname = $1,lastname = $2, fullname = $3, username = $4, updated_at = $5 WHERE id = $6;", updateUserNameDetails.Firstname, updateUserNameDetails.Lastname, updateUserNameDetails.Firstname+" "+updateUserNameDetails.Lastname, updateUserNameDetails.Username, utils.AddMinutesToCurrentUTCTime(0), userID)
 	if err != nil {
 		if dbErr, ok := err.(*pq.Error); ok {
 			errCode := dbErr.Code

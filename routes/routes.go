@@ -46,8 +46,12 @@ func InitializeRouter(controllers *controller.UserController) *chi.Mux {
 
 		})
 
-		r.Post("/users/details", controllers.GetUsersDetailsByIDs)
-
+		r.Route("/internal", func(r chi.Router) {
+			r.Post("/users/details", controllers.GetUsersDetailsByIDs)
+			r.Post("/user/otp", controllers.CreateOTPForDeleteOrganization)
+			r.Post("/otp/verify", controllers.VerifyOTPForDeleteOrganization)
+		})
+		
 		r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(405)
 			w.Write([]byte("wrong method"))

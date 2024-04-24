@@ -16,7 +16,7 @@ import (
 func (c *UserController) GoogleAuth(w http.ResponseWriter, r *http.Request) {
 	authURL := "https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=" + config.ConfigVal.GooglAuth.RedirectURL + "&client_id=" + config.ConfigVal.GooglAuth.ClientID + ""
 	googleAuthURL := response.GoogleAuthURL{AuthURL: authURL}
-	utils.SuccessMessageResponse(w, 200, googleAuthURL)
+	utils.SuccessMessageResponse(w, http.StatusOK, googleAuthURL)
 }
 
 func (c *UserController) GoogleLogin(w http.ResponseWriter, r *http.Request) {
@@ -32,14 +32,14 @@ func (c *UserController) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 
 	var bodyDataResponse map[string]interface{}
 
-	bodyDataResponse, err := utils.ExternalURLCall("POST", constant.GOOGLE_ACCESS_TOKEN_REQUEST_URL , googleAccessTokenRequest, bodyDataResponse)
+	bodyDataResponse, err := utils.ExternalURLCall(http.MethodPost, constant.GOOGLE_ACCESS_TOKEN_REQUEST_URL , googleAccessTokenRequest, bodyDataResponse)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
 	accessToken := bodyDataResponse["access_token"]
 	fmt.Println(accessToken)
-	bodyDataResponse, err = utils.ExternalURLCall("GET", constant.GOOGLE_INFO_REQUEST_URL+accessToken.(string), nil, bodyDataResponse)
+	bodyDataResponse, err = utils.ExternalURLCall(http.MethodGet, constant.GOOGLE_INFO_REQUEST_URL+accessToken.(string), nil, bodyDataResponse)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
@@ -57,8 +57,8 @@ func (c *UserController) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 	email := bodyDataResponse["email"].(string)
 	storeOTP := request.StoreOTP{
 		Email:     &email,
-		EventType: "google_login",
-		LoginType: "google_login",
+		EventType: constant.EVENT_TYPE_GOOGLE_LOGIN,
+		LoginType: constant.EVENT_TYPE_GOOGLE_LOGIN,
 		HashedOTP: hashedOTP,
 	}
 	err = c.repo.StoreOTP(storeOTP)
@@ -66,8 +66,8 @@ func (c *UserController) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	subject := "OTP for login/signup:"
-	go utils.SendOTPEmail(bodyDataResponse["email"].(string), otp, subject)
+	subject := "OTP for login "
+	go utils.SendOTPInEmail(bodyDataResponse["email"].(string), otp, subject)
 	// if err != nil {
 	// 	error_handling.ErrorMessageResponse(w, err)
 	// 	return
@@ -78,5 +78,5 @@ func (c *UserController) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 		Email:     bodyDataResponse["email"].(string),
 		Message:   constant.OTP_SENT,
 	}
-	utils.SuccessMessageResponse(w, 200, googleInfo)
+	utils.SuccessMessageResponse(w, http.StatusOK, googleInfo)
 }

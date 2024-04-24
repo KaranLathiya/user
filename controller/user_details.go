@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"user/constant"
 	error_handling "user/error"
@@ -26,7 +25,7 @@ func (c *UserController) GetUserDetailsByUsername(w http.ResponseWriter, r *http
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	utils.SuccessMessageResponse(w, 200, userDetails)
+	utils.SuccessMessageResponse(w, http.StatusOK, userDetails)
 }
 
 func (c *UserController) GetUserDetailsByID(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +36,7 @@ func (c *UserController) GetUserDetailsByID(w http.ResponseWriter, r *http.Reque
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	utils.SuccessMessageResponse(w, 200, userDetails)
+	utils.SuccessMessageResponse(w, http.StatusOK, userDetails)
 }
 
 func (c *UserController) GetCurrentUserDetails(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +46,7 @@ func (c *UserController) GetCurrentUserDetails(w http.ResponseWriter, r *http.Re
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	utils.SuccessMessageResponse(w, 200, userDetails)
+	utils.SuccessMessageResponse(w, http.StatusOK, userDetails)
 }
 
 func (c *UserController) UpdateUserPrivacy(w http.ResponseWriter, r *http.Request) {
@@ -64,7 +63,7 @@ func (c *UserController) UpdateUserPrivacy(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	successResponse := response.SuccessResponse{Message: constant.USER_DETAILS_UPDATED}
-	utils.SuccessMessageResponse(w, 200, successResponse)
+	utils.SuccessMessageResponse(w, http.StatusOK, successResponse)
 }
 
 func (c *UserController) UpdateBasicDetails(w http.ResponseWriter, r *http.Request) {
@@ -81,26 +80,5 @@ func (c *UserController) UpdateBasicDetails(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	successResponse := response.SuccessResponse{Message: constant.USER_DETAILS_UPDATED}
-	utils.SuccessMessageResponse(w, 200, successResponse)
-}
-
-func (c *UserController) GetUsersDetailsByIDs(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("called")
-	err := middleware.VerifyJWTToken(r.Header.Get("Authorization"), "User", "User details of organization")
-	if err != nil {
-		error_handling.ErrorMessageResponse(w, err)
-		return
-	}
-	var userIDs request.UserIDs
-	err = utils.BodyReadAndValidate(r.Body, &userIDs, nil)
-	if err != nil {
-		error_handling.ErrorMessageResponse(w, err)
-		return
-	}
-	usersDetails, err := c.repo.GetUsersDetailsByIDs(userIDs.UserIDs)
-	if err != nil {
-		error_handling.ErrorMessageResponse(w, err)
-		return
-	}
-	utils.SuccessMessageResponse(w, 200, usersDetails)
+	utils.SuccessMessageResponse(w, http.StatusOK, successResponse)
 }

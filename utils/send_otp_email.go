@@ -7,7 +7,7 @@ import (
 	error_handling "user/error"
 )
 
-func SendOTPEmail(email string, otp string, subject string) error {
+func SendOTPInEmail(email string, otp string, subject string) error {
 	from := config.ConfigVal.SMTP.EmailFrom
 	to := email
 

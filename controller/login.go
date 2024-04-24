@@ -27,28 +27,28 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	storeOTP := request.StoreOTP{
-		Email: login.Email,
+		Email:       login.Email,
 		PhoneNumber: login.PhoneNumber,
 		CountryCode: login.CountryCode,
-		EventType: "login",
-		LoginType: login.LoginType,
-		HashedOTP: hashedOTP,
-	} 
+		EventType:   constant.EVENT_TYPE_LOGIN,
+		LoginType:   login.LoginType,
+		HashedOTP:   hashedOTP,
+	}
 	err = c.repo.StoreOTP(storeOTP)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	subject := "OTP for login: "
-	if login.LoginType == "email" {
-		go utils.SendOTPEmail(*login.Email, otp, subject)
+	subject := "OTP for login "
+	if login.LoginType == constant.LOGIN_TYPE_EMAIL {
+		go utils.SendOTPInEmail(*login.Email, otp, subject)
 	} else {
-		go utils.SendOTPPhone(*login.CountryCode, *login.PhoneNumber, otp, subject)
+		go utils.SendOTPInPhoneNumber(*login.CountryCode, *login.PhoneNumber, otp, subject)
 	}
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
 	successResponse := response.SuccessResponse{Message: constant.OTP_SENT}
-	utils.SuccessMessageResponse(w, 200, successResponse)
+	utils.SuccessMessageResponse(w, http.StatusOK, successResponse)
 }

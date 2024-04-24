@@ -39,7 +39,7 @@ func (c *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 		Email:       signup.Email,
 		PhoneNumber: signup.PhoneNumber,
 		CountryCode: signup.CountryCode,
-		EventType:   "signup",
+		EventType:   constant.EVENT_TYPE_SIGNUP,
 		LoginType:   signup.LoginType,
 		HashedOTP:   hashedOTP,
 	}
@@ -48,16 +48,16 @@ func (c *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	// subject := "OTP for signup: "
-	// if signup.LoginType == "email" {
-	// 	go utils.SendOTPEmail(*signup.Email, otp, subject)
-	// } else {
-	// 	go utils.SendOTPPhone(*signup.CountryCode, *signup.PhoneNumber, otp, subject)
-	// }
-	// if err != nil {
-	// 	error_handling.ErrorMessageResponse(w, err)
-	// 	return
-	// }
+	subject := "OTP for signup: "
+	if signup.LoginType == constant.LOGIN_TYPE_EMAIL {
+		go utils.SendOTPInEmail(*signup.Email, otp, subject)
+	} else {
+		go utils.SendOTPInPhoneNumber(*signup.CountryCode, *signup.PhoneNumber, otp, subject)
+	}
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
+		return
+	}
 	successResponse := response.SuccessResponse{Message: constant.OTP_SENT}
-	utils.SuccessMessageResponse(w, 200, successResponse)
+	utils.SuccessMessageResponse(w, http.StatusOK, successResponse)
 }

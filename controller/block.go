@@ -26,7 +26,7 @@ func (c *UserController) BlockUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	successResponse := response.SuccessResponse{Message: constant.BLOCKED_USER}
-	utils.SuccessMessageResponse(w, 200, successResponse)
+	utils.SuccessMessageResponse(w, http.StatusOK, successResponse)
 }
 
 func (c *UserController) UnblockUser(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +45,7 @@ func (c *UserController) UnblockUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	successResponse := response.SuccessResponse{Message: constant.UNBLOCKED_USER}
-	utils.SuccessMessageResponse(w, 200, successResponse)
+	utils.SuccessMessageResponse(w, http.StatusOK, successResponse)
 }
 
 func (c *UserController) BlockedUserList(w http.ResponseWriter, r *http.Request) {
@@ -55,5 +55,5 @@ func (c *UserController) BlockedUserList(w http.ResponseWriter, r *http.Request)
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	utils.SuccessMessageResponse(w, 200, blockedUserList)
+	utils.SuccessMessageResponse(w, http.StatusOK, blockedUserList)
 }

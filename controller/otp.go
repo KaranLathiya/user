@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"user/constant"
 	error_handling "user/error"
 	"user/model/request"
 	"user/model/response"
@@ -22,11 +23,11 @@ func (c *UserController) VerifyOTP(w http.ResponseWriter, r *http.Request) {
 	}
 	go c.repo.DeleteOTPs(verifyOTP)
 	var userID string
-	if verifyOTP.EventType == "signup" {
+	if verifyOTP.EventType == constant.EVENT_TYPE_SIGNUP {
 		userID, err = c.repo.CreateUser(verifyOTP)
-	} else if verifyOTP.EventType == "login" {
+	} else if verifyOTP.EventType == constant.EVENT_TYPE_LOGIN {
 		userID, err = c.repo.GetUserID(verifyOTP)
-	} else if verifyOTP.EventType == "google_login" {
+	} else if verifyOTP.EventType == constant.EVENT_TYPE_GOOGLE_LOGIN {
 		userID, err = c.repo.GetUserID(verifyOTP)
 		if err != nil {
 			userID, err = c.repo.CreateUser(verifyOTP)
@@ -36,5 +37,6 @@ func (c *UserController) VerifyOTP(w http.ResponseWriter, r *http.Request) {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	utils.SuccessMessageResponse(w, 200, response.UserID{UserID: userID})
+	utils.SuccessMessageResponse(w, http.StatusOK, response.UserID{UserID: userID})
 }
+

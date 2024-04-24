@@ -9,7 +9,7 @@ import (
 	twilioApi "github.com/twilio/twilio-go/rest/api/v2010"
 )
 
-func SendOTPPhone(countryCode string, phoneNumber string, otp string, subject string) error {
+func SendOTPInPhoneNumber(countryCode string, phoneNumber string, otp string, subject string) error {
 
 	client := twilio.NewRestClientWithParams(twilio.ClientParams{
 		Username: config.ConfigVal.Twilio.AcountSID,
