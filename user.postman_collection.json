@@ -1,0 +1,568 @@
+{
+	"info": {
+		"_postman_id": "32e248a8-6637-4716-994c-b8038a63dd51",
+		"name": "user",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30678853"
+	},
+	"item": [
+		{
+			"name": "signup email",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\":\"karan\",\r\n    \"lastname\":\"lathiya\",\r\n    \"email\":\"2810karanlathiya@gmail.com\",\r\n    \"loginType\":\"email\",\r\n    \"countryCode\":\"91\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/auth/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signup phone",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\":\"karan\",\r\n    \"lastname\":\"lathiya\",\r\n    \"phoneNumber\":\"9327297361\",\r\n    \"loginType\":\"phone\",\r\n    \"countryCode\":\"91\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signup google",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/auth/google",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"auth",
+						"google"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signup google Copy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/auth/google/login?code=4%2F0AeaYSHBPKdGLbm0kaArYtpSaZjfKy_koOxJ31Xn8_iFXo7d3ptBfbepPrg1rlc1U5cJoIg",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"auth",
+						"google",
+						"login"
+					],
+					"query": [
+						{
+							"key": "code",
+							"value": "4%2F0AeaYSHBPKdGLbm0kaArYtpSaZjfKy_koOxJ31Xn8_iFXo7d3ptBfbepPrg1rlc1U5cJoIg"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signup google Copy 2",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://www.googleapis.com/oauth2/v3/userinfo?access_token=ya29.a0Ad52N3_JZEinNfDM_SmHtShff6ufpAwidCaI58rhjjlGgxuFc1uAchaZnTKSn3eXtZjqPqwsf-sAmr0JWG-hMh9cnJd6Ej4HT8CL8JTQOE0QB2V8KDDTq3geFsR78wNGI-LqVz_1PiE7v4dkYdE45NxHDL97LslecE4aCgYKAbISARISFQHGX2MidD2S2P70iVN5yAwsU9ZItw0170",
+					"protocol": "https",
+					"host": [
+						"www",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"oauth2",
+						"v3",
+						"userinfo"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "ya29.a0Ad52N3_JZEinNfDM_SmHtShff6ufpAwidCaI58rhjjlGgxuFc1uAchaZnTKSn3eXtZjqPqwsf-sAmr0JWG-hMh9cnJd6Ej4HT8CL8JTQOE0QB2V8KDDTq3geFsR78wNGI-LqVz_1PiE7v4dkYdE45NxHDL97LslecE4aCgYKAbISARISFQHGX2MidD2S2P70iVN5yAwsU9ZItw0170"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "verify otp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\":\"karan\",\r\n    \"lastname\":\"lathiya\",\r\n    \"email\":\"2810karanlathiya@gmail.com\",\r\n    \"eventType\":\"signup\",\r\n    \"signupMode\":\"email\",\r\n    \"otp\":\"246285\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/otp/verify",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"otp",
+						"verify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "verify otp Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\":\"karan\",\r\n    \"lastname\":\"lathiya\",\r\n    \"phoneNumber\":\"9327297362\",\r\n    \"eventType\":\"signup\",\r\n    \"signupMode\":\"phone\",\r\n    \"countryCode\":\"91\",\r\n    \"otp\":\"838108\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/otp/verify",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"otp",
+						"verify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "verify otp for delete org",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"eventType\":\"organization_delete\",\r\n    \"otp\":\"057016\",\r\n    \"organizationID\":\"962702819215704065\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/internal/otp/verify",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"internal",
+						"otp",
+						"verify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update privacy",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Auth-user",
+						"value": "958413185190068225",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"privacy\":\"private\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/user/profile/privacy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"profile",
+						"privacy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update name-details",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Auth-user",
+						"value": "958413185190068225",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\":\"karan\",\r\n    \"lastname\":\"lathiya\",\r\n   \"username\":\"kl\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/user/profile/basic",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"profile",
+						"basic"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "block user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Auth-user",
+						"value": "958413185190068225",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"blockedUser\":\"958414696278327297\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/users/block",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"users",
+						"block"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "block user list",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Auth-user",
+						"value": "958413185190068225",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/users/block",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"users",
+						"block"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unblock user",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Auth-user",
+						"value": "958413185190068225",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/users/958414696278327297/unblock",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"users",
+						"958414696278327297",
+						"unblock"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "userdetails by id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Auth-user",
+						"value": "958428117322956801",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/users/958414696278327297/id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"users",
+						"958414696278327297",
+						"id"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "userdetails by username",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Auth-user",
+						"value": "958414696278327297",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\":\"karan\",\r\n    \"lastname\":\"lathiya\",\r\n   \"username\":\"kl\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/users/k123/username",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"users",
+						"k123",
+						"username"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user list",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Auth-user",
+						"value": "958413185190068225",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\":\"karan\",\r\n    \"lastname\":\"lathiya\",\r\n   \"username\":\"kl\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/users?orderBy=date",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "orderBy",
+							"value": "date"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

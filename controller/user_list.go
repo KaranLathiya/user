@@ -15,7 +15,7 @@ func (c *UserController) GetUserList(w http.ResponseWriter, r *http.Request) {
 	limit, _ := strconv.Atoi(r.FormValue("limit"))
 	offset, _ := strconv.Atoi(r.FormValue("offset"))
 
-	orderBy := r.FormValue("orderby")
+	orderBy := r.FormValue("orderBy")
 	order := r.FormValue("order")
 	email := r.FormValue("email")
 	fullname := r.FormValue("fullname")
