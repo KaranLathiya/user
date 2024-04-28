@@ -1,7 +1,7 @@
 -- migrate:up
 
 CREATE TYPE IF NOT EXISTS public.event_type AS ENUM (
-	'signup',
+	'signup',	
 	'login',
 	'google_login',
 	'organization_delete');
@@ -63,6 +63,12 @@ CREATE TABLE IF NOT EXISTS public.blocked_user (
 
 DROP TABLE IF EXISTS public.otp;
 
+DROP TABLE IF EXISTS public.blocked_user;
+
 DROP TABLE IF EXISTS public.users;
 
-DROP TABLE IF EXISTS public.blocked_user;
+DROP TYPE IF EXISTS public.event_type;
+
+DROP TYPE IF EXISTS public.privacy;
+
+DROP TYPE IF EXISTS public.signup_mode;

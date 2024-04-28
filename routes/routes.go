@@ -16,10 +16,12 @@ func InitializeRouter(controllers *controller.UserController) *chi.Mux {
 		r.Route("/auth", func(r chi.Router) {
 			r.Post("/signup", controllers.Signup)
 			r.Post("/login", controllers.Login)
+
 			r.Route("/google", func(r chi.Router) {
 				r.Get("/", controllers.GoogleAuth)
 				r.Get("/login", controllers.GoogleLogin)
 			})
+
 		})
 
 		r.Post("/otp/verify", controllers.VerifyOTP)

@@ -42,7 +42,7 @@ Prerequisites you need to set up on your local computer:
 3. Create `.env` file in current directory and update below configurations:
    - Add Cockroach database URL in `DATABASE_URL` variable.
 4. Run `dbmate migrate` to migrate database schema.
-6. Run `go run cmd/main.go` to run the programme.
+5. Run `go run cmd/main.go` to run the programme.
 
 # Routing
 
@@ -130,5 +130,5 @@ To get otp on registered details(for delete organization)  --POST
 
 To verify otp for delete organization --POST
 
-    http://localhost:8000/user/otp/verify
+    http://localhost:8000/internal/otp/verify
 
