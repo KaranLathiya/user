@@ -47,14 +47,14 @@ func UnblockUser(db *sql.DB, blockedUser request.BlockUser, userID string) error
 }
 
 func BlockedUserList(db *sql.DB, userID string) ([]response.BlockUserDetails, error) {
-	rows, err := db.Query("SELECT id,blocked,blocked_at FROM public.blocked_user WHERE blocker = $1 ORDER BY blocked_at DESC", userID)
+	rows, err := db.Query("SELECT b.id,u.fullname,blocked,blocked_at FROM public.blocked_user b left join users u on u.id = blocked WHERE blocker = $1 ORDER BY blocked_at DESC", userID)
 	if err != nil {
 		return nil, error_handling.InternalServerError
 	}
 	var blockedUserList []response.BlockUserDetails
 	for rows.Next() {
 		var blockedUser response.BlockUserDetails
-		err := rows.Scan(&blockedUser.ID, &blockedUser.BlockedUser, &blockedUser.BlockedAt)
+		err := rows.Scan(&blockedUser.ID, &blockedUser.Fullname, &blockedUser.BlockedUser, &blockedUser.BlockedAt)
 		if err != nil {
 			return nil, error_handling.InternalServerError
 		}
