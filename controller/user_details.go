@@ -15,12 +15,7 @@ import (
 func (c *UserController) GetUserDetailsByUsername(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value(middleware.UserCtxKey).(string)
 	username := chi.URLParam(r, "username")
-	id, err := c.repo.GetIDByUsername(username)
-	if err != nil {
-		error_handling.ErrorMessageResponse(w, err)
-		return
-	}
-	userDetails, err := c.repo.GetUserDetailsByID(id, userID)
+	userDetails, err := c.repo.GetUserDetailsByUsername(username, userID)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
@@ -30,7 +25,7 @@ func (c *UserController) GetUserDetailsByUsername(w http.ResponseWriter, r *http
 
 func (c *UserController) GetUserDetailsByID(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value(middleware.UserCtxKey).(string)
-	id := chi.URLParam(r, "id")
+	id := chi.URLParam(r, "user-id")
 	userDetails, err := c.repo.GetUserDetailsByID(id, userID)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)

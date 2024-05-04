@@ -26,9 +26,9 @@ func (c *UserController) VerifyOTP(w http.ResponseWriter, r *http.Request) {
 	if verifyOTP.EventType == constant.EVENT_TYPE_SIGNUP {
 		userID, err = c.repo.CreateUser(verifyOTP)
 	} else if verifyOTP.EventType == constant.EVENT_TYPE_LOGIN {
-		userID, err = c.repo.GetUserID(verifyOTP)
+		userID, err = c.repo.GetUserID(verifyOTP.Email, verifyOTP.PhoneNumber, verifyOTP.CountryCode, verifyOTP.SignupMode)
 	} else if verifyOTP.EventType == constant.EVENT_TYPE_GOOGLE_LOGIN {
-		userID, err = c.repo.GetUserID(verifyOTP)
+		userID, err = c.repo.GetUserID(verifyOTP.Email, verifyOTP.PhoneNumber, verifyOTP.CountryCode, verifyOTP.SignupMode)
 		if err != nil {
 			userID, err = c.repo.CreateUser(verifyOTP)
 		}
@@ -39,4 +39,3 @@ func (c *UserController) VerifyOTP(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.SuccessMessageResponse(w, http.StatusOK, response.UserID{UserID: userID})
 }
-

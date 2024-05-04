@@ -14,7 +14,8 @@ import (
 )
 
 func (c *UserController) GoogleAuth(w http.ResponseWriter, r *http.Request) {
-	authURL := "https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=" + config.ConfigVal.GooglAuth.RedirectURL + "&client_id=" + config.ConfigVal.GooglAuth.ClientID + ""
+	scopes := "https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/userinfo.email"
+	authURL := "https://accounts.google.com/o/oauth2/v2/auth?scope="+scopes+"&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=" + config.ConfigVal.GooglAuth.RedirectURL + "&client_id=" + config.ConfigVal.GooglAuth.ClientID + ""
 	googleAuthURL := response.GoogleAuthURL{AuthURL: authURL}
 	utils.SuccessMessageResponse(w, http.StatusOK, googleAuthURL)
 }
@@ -32,7 +33,7 @@ func (c *UserController) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 
 	var bodyDataResponse map[string]interface{}
 
-	bodyDataResponse, err := utils.ExternalURLCall(http.MethodPost, constant.GOOGLE_ACCESS_TOKEN_REQUEST_URL , googleAccessTokenRequest, bodyDataResponse)
+	bodyDataResponse, err := utils.ExternalURLCall(http.MethodPost, constant.GOOGLE_ACCESS_TOKEN_REQUEST_URL, googleAccessTokenRequest, bodyDataResponse)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return

@@ -36,22 +36,22 @@ func InitializeRouter(controllers *controller.UserController) *chi.Mux {
 		r.Route("/users", func(r chi.Router) {
 			r.Use(middleware.Authentication)
 			r.Get("/", controllers.GetUserList)
-			r.Get("/{id}/id", controllers.GetUserDetailsByID)
-			r.Get("/{username}/username", controllers.GetUserDetailsByUsername)
+			r.Get("/id/{user-id}", controllers.GetUserDetailsByID)
+			r.Get("/username/{username}", controllers.GetUserDetailsByUsername)
 
 			r.Route("/block", func(r chi.Router) {
 				r.Get("/", controllers.BlockedUserList)
 				r.Post("/", controllers.BlockUser)
 			})
 
-			r.Delete("/{blocked}/unblock", controllers.UnblockUser)
+			r.Delete("/unblock/{blocked}", controllers.UnblockUser)
 
 		})
 
 		r.Route("/internal", func(r chi.Router) {
 			r.Post("/users/details", controllers.GetUsersDetailsByIDs)
-			r.Post("/user/otp", controllers.CreateOTPForDeleteOrganization)
-			r.Post("/otp/verify", controllers.VerifyOTPForDeleteOrganization)
+			r.Post("/user/organization/delete/otp", controllers.CreateOTPForDeleteOrganization)
+			r.Post("/user/organization/delete/otp/verify", controllers.VerifyOTPForDeleteOrganization)
 		})
 		
 		r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {

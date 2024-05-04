@@ -6,8 +6,8 @@ type UserListParameter struct {
 	PhoneNumber *string `json:"phoneNumber" `
 	Limit       int     `json:"limit" `
 	Offset      int     `json:"offset" `
-	Order       string  `json:"order" validate:"in:asc,desc" `
-	OrderBy     string  `json:"orderBy" validate:"in:fullname,date" `
+	Sorting     string  `json:"sorting" validate:"in:asc,desc" `
+	Filter      string  `json:"filter" validate:"in:fullname,date" `
 }
 
 type UpdateUserPrivacy struct {

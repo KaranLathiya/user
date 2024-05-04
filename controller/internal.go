@@ -11,7 +11,7 @@ import (
 )
 
 func (c *UserController) GetUsersDetailsByIDs(w http.ResponseWriter, r *http.Request) {
-	err := utils.VerifyJWT(r.Header.Get("Authorization"), "User", "User details of organization")
+	err := utils.VerifyJWT(r.Header.Get("Authorization"), "User", "User")
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
@@ -31,7 +31,7 @@ func (c *UserController) GetUsersDetailsByIDs(w http.ResponseWriter, r *http.Req
 }
 
 func (c *UserController) CreateOTPForDeleteOrganization(w http.ResponseWriter, r *http.Request) {
-	err := utils.VerifyJWT(r.Header.Get("Authorization"), "Organization", "OTP for delete organization")
+	err := utils.VerifyJWT(r.Header.Get("Authorization"), "Organization", "Organization")
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
@@ -107,12 +107,12 @@ func (c *UserController) VerifyOTPForDeleteOrganization(w http.ResponseWriter, r
 		return
 	}
 	go c.repo.DeleteOTPs(verifyOTP)
-	jwtToken, err := utils.CreateJWT("Organization", "Delete the organization")
+	jwtToken, err := utils.CreateJWT("Organization", "Organization")
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	body, err := utils.CallAnotherService(jwtToken, constant.ORGANIZATION_SERVICE_BASE_URL+"/internal/organization/"+verifyOTPForDeleteOrganization.OrganizationID, nil, http.MethodDelete)
+	body, err := utils.CallAnotherService(jwtToken, constant.ORGANIZATION_SERVICE_BASE_URL+"internal/organization/"+verifyOTPForDeleteOrganization.OrganizationID, nil, http.MethodDelete)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return

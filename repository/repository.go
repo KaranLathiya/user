@@ -12,15 +12,15 @@ type Repository interface {
 	VerifyOTP(verifyOTP request.VerifyOTP) error
 	DeleteOTPs(verifyOTP request.VerifyOTP) error
 	CreateUser(verifyOTP request.VerifyOTP) (string, error)
-	GetUserID(verifyOTP request.VerifyOTP) (string, error)
+	GetUserID(email *string, phoneNumber *string, countryCode *string, signupMode string) (string, error)
 	UpdateUserPrivacy(updateUserPrivacy request.UpdateUserPrivacy, userID string) error
 	UpdateBasicDetails(updateUserNameDetails request.UpdateUserNameDetails, userID string) error
 	BlockUser(blockUser request.BlockUser, userID string) error
 	UnblockUser(blockedUser request.BlockUser, userID string) error
 	BlockedUserList(userID string) ([]response.BlockUserDetails, error)
-	GetIDByUsername(username string) (string, error)
 	GetCurrentUserDetailsByID(userID string) (response.UserDetails, error)
 	GetUserDetailsByID(id string, userID string) (response.UserDetails, error)
+	GetUserDetailsByUsername(username string, userID string) (response.UserDetails, error)
 	GetUserList(userID string, userListParameter request.UserListParameter) ([]response.User, error)
 	UserExistence(email *string, phoneNumber *string) (bool, error)
 	GetUsersDetailsByIDs(userIDs []string) (map[string]response.UserDetails, error)
@@ -51,8 +51,8 @@ func (r *Repositories) CreateUser(verifyOTP request.VerifyOTP) (string, error) {
 	return dal.CreateUser(r.db, verifyOTP)
 }
 
-func (r *Repositories) GetUserID(verifyOTP request.VerifyOTP) (string, error) {
-	return dal.GetUserID(r.db, verifyOTP)
+func (r *Repositories) GetUserID(email *string, phoneNumber *string, countryCode *string, signupMode string) (string, error) {
+	return dal.GetUserID(r.db, email, phoneNumber, countryCode, signupMode)
 }
 
 func (r *Repositories) UpdateUserPrivacy(updateUserPrivacy request.UpdateUserPrivacy, userID string) error {
@@ -75,12 +75,12 @@ func (r *Repositories) BlockedUserList(userID string) ([]response.BlockUserDetai
 	return dal.BlockedUserList(r.db, userID)
 }
 
-func (r *Repositories) GetIDByUsername(username string) (string, error) {
-	return dal.GetIDByUsername(r.db, username)
-}
-
 func (r *Repositories) GetUserDetailsByID(id string, userID string) (response.UserDetails, error) {
 	return dal.GetUserDetailsByID(r.db, id, userID)
+}
+
+func (r *Repositories) GetUserDetailsByUsername(username string, userID string) (response.UserDetails, error) {
+	return dal.GetUserDetailsByUsername(r.db, username, userID)
 }
 
 func (r *Repositories) GetCurrentUserDetailsByID(userID string) (response.UserDetails, error) {

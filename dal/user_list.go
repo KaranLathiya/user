@@ -25,14 +25,14 @@ func GetUserList(db *sql.DB, userID string, userListParameter request.UserListPa
 		filterArgsList = append(filterArgsList, *userListParameter.PhoneNumber)
 	}
 
-	if userListParameter.OrderBy == "" {
-		userListParameter.OrderBy = "fullname"
-	} else if userListParameter.OrderBy == "date" {
-		userListParameter.OrderBy = "created_at"
+	if userListParameter.Filter == "" {
+		userListParameter.Filter = "fullname"
+	} else if userListParameter.Filter == "date" {
+		userListParameter.Filter = "created_at"
 	}
 
-	if userListParameter.OrderBy == "" {
-		userListParameter.OrderBy = "asc"
+	if userListParameter.Sorting == "" {
+		userListParameter.Sorting = "asc"
 	}
 
 	joinCondition := "LEFT JOIN blocked_user b1 ON u.id = b1.blocked AND b1.blocker = '" + userID + "' LEFT JOIN blocked_user b2 ON u.id = b2.blocker AND b2.blocked = '" + userID + "' WHERE b1.blocker IS NULL AND b2.blocked IS NULL AND u.id != '" + userID + "'"
@@ -41,7 +41,7 @@ func GetUserList(db *sql.DB, userID string, userListParameter request.UserListPa
 		andKeyword = "AND"
 	}
 
-	query := fmt.Sprintf("SELECT u.id, firstname, lastname, fullname, username, email, phone_number, country_code FROM public.users u %s AND privacy = 'public' %s %v ORDER BY %s %s LIMIT %d OFFSET %d", joinCondition, andKeyword, strings.Join(where, " AND "), userListParameter.OrderBy, userListParameter.Order, userListParameter.Limit, userListParameter.Offset)
+	query := fmt.Sprintf("SELECT u.id, firstname, lastname, fullname, username, email, phone_number, country_code FROM public.users u %s AND privacy = 'public' %s %v ORDER BY %s %s LIMIT %d OFFSET %d", joinCondition, andKeyword, strings.Join(where, " AND "), userListParameter.Filter, userListParameter.Sorting, userListParameter.Limit, userListParameter.Offset)
 	query = sqlx.Rebind(sqlx.DOLLAR, query)
 	rows, err := db.Query(query, filterArgsList...)
 	if err != nil {

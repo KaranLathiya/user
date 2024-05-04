@@ -17,11 +17,12 @@ func init() {
 
 	// 	return true
 	// })
-	// validate.AddGlobalMessages(map[string]string{
-	// 	"minLength": "OO! {field} min length is %d",
-	// 	"required": "oh! the {field} is required",
-	// 	"email": "email is invalid",
-	//   })
+	validate.AddGlobalMessages(map[string]string{
+		// "minLength": "OO! {field} min length is %d",
+		// "required": "oh! the {field} is required",
+		// "email": "email is invalid",
+		"emailOrPhoneNumber": "phoneNumber and countryCode must be null with the email",
+	  })
 }
 
 // func (f UserForm) Messages() map[string]string {

@@ -92,11 +92,11 @@ To fetch profile details for user --GET
 
 To get other UserDetails by userID  --GET
 
-    http://localhost:8000/users/{id}/id
+    http://localhost:8000/users/id/{id}
     
 To get other UserDetails by username  --GET
 
-    http://localhost:8080/users/{username}/username
+    http://localhost:8080/users/username/{username}
 
 ## For get all other UserDetails 
 
@@ -112,7 +112,7 @@ To block other User  --POST
 
 To unblock User by userID  --DELETE
 
-    http://localhost:8000/users/{blocked}/unblock 
+    http://localhost:8000/users/unblock/{blocked}
 
 To get list of all blocked Users  --GET
 
@@ -126,9 +126,9 @@ To get details of users  --POST
     
 To get otp on registered details(for delete organization)  --POST
 
-    http://localhost:8000/internal/user/otp
+    http://localhost:8000/internal/user/organization/delete/otp
 
 To verify otp for delete organization --POST
 
-    http://localhost:8000/internal/otp/verify
+    http://localhost:8000/internal/user/organization/delete/otp/verify
 

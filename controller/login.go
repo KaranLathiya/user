@@ -16,6 +16,11 @@ func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
+	_, err = c.repo.GetUserID(login.Email, login.PhoneNumber, login.CountryCode, login.LoginType)
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
+		return
+	}
 	otp, err := utils.GenerateOTP(6)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, error_handling.OTPGenerateError)

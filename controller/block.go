@@ -44,8 +44,9 @@ func (c *UserController) UnblockUser(w http.ResponseWriter, r *http.Request) {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	successResponse := response.SuccessResponse{Message: constant.UNBLOCKED_USER}
-	utils.SuccessMessageResponse(w, http.StatusOK, successResponse)
+	// successResponse := response.SuccessResponse{Message: constant.UNBLOCKED_USER}
+	// utils.SuccessMessageResponse(w, http.StatusOK, nil)
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func (c *UserController) BlockedUserList(w http.ResponseWriter, r *http.Request) {

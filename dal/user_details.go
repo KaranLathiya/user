@@ -14,16 +14,16 @@ import (
 	"github.com/lib/pq"
 )
 
-func GetUserID(db *sql.DB, verifyOTP request.VerifyOTP) (string, error) {
+func GetUserID(db *sql.DB, email *string, phoneNumber *string, countryCode *string, signupMode string) (string, error) {
 	var where []string
 	var filterArgsList []interface{}
 	var userID string
-	if verifyOTP.SignupMode == constant.SIGNUP_MODE_EMAIL || verifyOTP.SignupMode == constant.SIGNUP_MODE_GOOGLE_LOGIN {
+	if signupMode == constant.SIGNUP_MODE_EMAIL || signupMode == constant.SIGNUP_MODE_GOOGLE_LOGIN {
 		where = append(where, "email = ? ")
-		filterArgsList = append(filterArgsList, verifyOTP.Email)
-	} else if verifyOTP.SignupMode == constant.SIGNUP_MODE_PHONE_NUMBER{
+		filterArgsList = append(filterArgsList, *email)
+	} else if signupMode == constant.SIGNUP_MODE_PHONE_NUMBER {
 		where = append(where, "phone_number = ?", "country_code = ?")
-		filterArgsList = append(filterArgsList, verifyOTP.PhoneNumber, verifyOTP.CountryCode)
+		filterArgsList = append(filterArgsList, *phoneNumber, *countryCode)
 	}
 	query := fmt.Sprintf("SELECT id FROM public.users WHERE %v", strings.Join(where, " AND "))
 	query = sqlx.Rebind(sqlx.DOLLAR, query)
@@ -38,23 +38,37 @@ func GetUserID(db *sql.DB, verifyOTP request.VerifyOTP) (string, error) {
 	return userID, nil
 }
 
-func GetIDByUsername(db *sql.DB, username string) (string, error) {
-	var id string
-	err := db.QueryRow("SELECT id FROM public.users WHERE username = $1", username).Scan(&id)
-	if err != nil {
-		if err.Error() == "sql: no rows in result set" {
-			return "", error_handling.UserDoesNotExist
-		}
-		return "", error_handling.InternalServerError
-	}
-	return id, nil
-}
+// func GetIDByUsername(db *sql.DB, username string) (string, error) {
+// 	var id string
+// 	err := db.QueryRow("SELECT id FROM public.users WHERE username = $1", username).Scan(&id)
+// 	if err != nil {
+// 		if err.Error() == "sql: no rows in result set" {
+// 			return "", error_handling.UserDoesNotExist
+// 		}
+// 		return "", error_handling.InternalServerError
+// 	}
+// 	return id, nil
+// }
 
 func GetUserDetailsByID(db *sql.DB, id string, userID string) (response.UserDetails, error) {
 	userDetails := response.UserDetails{
 		UserID: id,
 	}
 	err := db.QueryRow("SELECT firstname,lastname,fullname,username,email,phone_number,country_code,privacy,created_at,updated_at FROM public.users u LEFT JOIN blocked_user b1 ON u.id = b1.blocked AND b1.blocker = $1 LEFT JOIN blocked_user b2 ON u.id = b2.blocker AND b2.blocked = $1 WHERE b1.blocker IS NULL AND b2.blocked IS NULL AND u.id = $2 AND privacy = 'public' ", userID, id).Scan(&userDetails.Firstname, &userDetails.Lastname, &userDetails.Fullname, &userDetails.Username, &userDetails.Email, &userDetails.PhoneNumber, &userDetails.CountryCode, &userDetails.Privacy, &userDetails.CreatedAt, &userDetails.UpdatedAt)
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			return response.UserDetails{}, nil
+		}
+		return userDetails, error_handling.InternalServerError
+	}
+	return userDetails, nil
+}
+
+func GetUserDetailsByUsername(db *sql.DB, username string, userID string) (response.UserDetails, error) {
+	userDetails := response.UserDetails{
+		Username: username,
+	}
+	err := db.QueryRow("SELECT firstname,lastname,fullname,u.id,email,phone_number,country_code,privacy,created_at,updated_at FROM public.users u LEFT JOIN blocked_user b1 ON u.id = b1.blocked AND b1.blocker = $1 LEFT JOIN blocked_user b2 ON u.id = b2.blocker AND b2.blocked = $1 WHERE b1.blocker IS NULL AND b2.blocked IS NULL AND u.username = $2 AND privacy = 'public' ", userID, username).Scan(&userDetails.Firstname, &userDetails.Lastname, &userDetails.Fullname, &userDetails.UserID, &userDetails.Email, &userDetails.PhoneNumber, &userDetails.CountryCode, &userDetails.Privacy, &userDetails.CreatedAt, &userDetails.UpdatedAt)
 	if err != nil {
 		if err.Error() == "sql: no rows in result set" {
 			return response.UserDetails{}, nil

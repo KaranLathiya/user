@@ -38,6 +38,15 @@ func BodyRead(reader io.ReadCloser, bodyData interface{}) error {
 func ValidateStruct(data interface{}, addValidationRules map[string]string) error {
 	var errorMessage []string
 	validator := validate.Struct(data)
+	validate.AddValidator("emailOrPhoneNumber", func(val any) bool {
+		// do validate val ...
+		_, phoneNumberExist := validator.Get("PhoneNumber")
+		_, countryCodeExist := validator.Get("CountryCode")
+		if phoneNumberExist || countryCodeExist{
+			return false
+		}
+		return true
+	})
 	validator.StringRules(addValidationRules)
 	if !(validator.Validate()) {
 		var invalidDataArray []error_handling.InvalidData

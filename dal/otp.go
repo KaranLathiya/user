@@ -14,12 +14,6 @@ import (
 
 func StoreOTP(db *sql.DB, storeOTP request.StoreOTP) error {
 	var err error
-	if storeOTP.LoginType == constant.LOGIN_TYPE_EMAIL || storeOTP.LoginType == constant.EVENT_TYPE_GOOGLE_LOGIN {
-		storeOTP.CountryCode = nil
-		storeOTP.PhoneNumber = nil
-	} else {
-		storeOTP.Email = nil
-	}
 	_, err = db.Exec("INSERT INTO public.otp (email,phone_number,country_code,otp,expires_at,event_type,organization_id) VALUES ( $1 , $2 , $3 , $4 , $5 , $6 , $7 )", storeOTP.Email, storeOTP.PhoneNumber, storeOTP.CountryCode, storeOTP.HashedOTP, utils.AddMinutesToCurrentUTCTime(5), storeOTP.EventType, storeOTP.OrganizationID)
 	fmt.Println(err)
 	if err != nil {

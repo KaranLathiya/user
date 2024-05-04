@@ -3,7 +3,7 @@ package request
 type VerifyOTP struct {
 	Firstname      string  `json:"firstname"  validate:"required_if:EventType,signup,google_login|min_len:2|max_len:50"  `
 	Lastname       string  `json:"lastname"  validate:"required_if:EventType,signup,google_login|min_len:2|max_len:50"`
-	Email          *string `json:"email" validate:"required_if:SignupMode,email,google_login|email|required_without:PhoneNumber|max_len:320" `
+	Email          *string `json:"email" validate:"required_if:SignupMode,email,google_login|email|required_without:PhoneNumber|max_len:320|emailOrPhoneNumber" `
 	PhoneNumber    *string `json:"phoneNumber" validate:"required_if:SignupMode,phone_number|required_without:Email|min_len:4|max_len:15" `
 	CountryCode    *string `json:"countryCode" validate:"required_if:SignupMode,phone_number|min_len:2|max_len:5" `
 	EventType      string  `json:"eventType" validate:"required|in:signup,login,google_login,organization_delete"`
@@ -13,7 +13,7 @@ type VerifyOTP struct {
 }
 
 type StoreOTP struct {
-	Email          *string `json:"email" validate:"required_if:LoginType,email,google_login|email|required_without:PhoneNumber|max_len:320" `
+	Email          *string `json:"email" validate:"required_if:LoginType,email,google_login|email|required_without:PhoneNumber|max_len:320|emailOrPhoneNumber" `
 	PhoneNumber    *string `json:"phoneNumber" validate:"required_if:LoginType,phone_number|required_without:Email|min_len:4|max_len:15" `
 	CountryCode    *string `json:"countryCode" validate:"required_if:SignupMode,phone_number|min_len:2|max_len:5" `
 	EventType      string  `json:"eventType" validate:"required|in:signup,login,google_login,organization_delete"`
