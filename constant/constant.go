@@ -10,6 +10,7 @@ const (
 	GOOGLE_ACCESS_TOKEN_REQUEST_URL = "https://oauth2.googleapis.com/token"
 	GOOGLE_INFO_REQUEST_URL         = "https://www.googleapis.com/oauth2/v3/userinfo?access_token="
 	ORGANIZATION_SERVICE_BASE_URL   = "http://localhost:9000/"
+	GOOGLE_AUTH_URL                 = "https://oauth2.googleapis.com/token"
 
 	EVENT_TYPE_SIGNUP              = "signup"
 	EVENT_TYPE_LOGIN               = "login"
@@ -19,7 +20,7 @@ const (
 	SIGNUP_MODE_EMAIL        = "email"
 	SIGNUP_MODE_GOOGLE_LOGIN = "google_login"
 	SIGNUP_MODE_PHONE_NUMBER = "phone_number"
-	
+
 	LOGIN_TYPE_EMAIL        = "email"
 	LOGIN_TYPE_PHONE_NUMBER = "phone_number"
 )

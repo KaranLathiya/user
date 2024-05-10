@@ -15,7 +15,7 @@ import (
 
 func (c *UserController) GoogleAuth(w http.ResponseWriter, r *http.Request) {
 	scopes := "https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/userinfo.email"
-	authURL := "https://accounts.google.com/o/oauth2/v2/auth?scope="+scopes+"&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=" + config.ConfigVal.GooglAuth.RedirectURL + "&client_id=" + config.ConfigVal.GooglAuth.ClientID + ""
+	authURL := constant.GOOGLE_AUTH_URL+"?scope="+scopes+"&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=" + config.ConfigVal.GoogleAuth.RedirectURI + "&client_id=" + config.ConfigVal.GoogleAuth.ClientID + ""
 	googleAuthURL := response.GoogleAuthURL{AuthURL: authURL}
 	utils.SuccessMessageResponse(w, http.StatusOK, googleAuthURL)
 }
@@ -25,9 +25,9 @@ func (c *UserController) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 	code = strings.ReplaceAll(code, "%2F", "/")
 	googleAccessTokenRequest := request.GoogleAccessTokenRequest{
 		Code:         code,
-		ClientID:     config.ConfigVal.GooglAuth.ClientID,
-		CLientSecret: config.ConfigVal.GooglAuth.ClientSecret,
-		RedirectURI:  config.ConfigVal.GooglAuth.RedirectURL,
+		ClientID:     config.ConfigVal.GoogleAuth.ClientID,
+		CLientSecret: config.ConfigVal.GoogleAuth.ClientSecret,
+		RedirectURI:  config.ConfigVal.GoogleAuth.RedirectURI,
 		GrantType:    "authorization_code",
 	}
 

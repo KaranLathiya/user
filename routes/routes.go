@@ -49,11 +49,19 @@ func InitializeRouter(controllers *controller.UserController) *chi.Mux {
 		})
 
 		r.Route("/internal", func(r chi.Router) {
-			r.Post("/users/details", controllers.GetUsersDetailsByIDs)
-			r.Post("/user/organization/delete/otp", controllers.CreateOTPForDeleteOrganization)
-			r.Post("/user/organization/delete/otp/verify", controllers.VerifyOTPForDeleteOrganization)
+
+			r.Route("/user/organization/delete/otp", func(r chi.Router) {
+				r.Post("/", controllers.CreateOTPForDeleteOrganization)
+				r.Post("/verify", controllers.VerifyOTPForDeleteOrganization)
+			})
+
+			r.Route("/users/details", func(r chi.Router) {
+				r.Post("/", controllers.GetUsersDetailsByIDs)
+				r.Get("/{user-id}", controllers.GetOrganizationCreatorDetailsByID)
+			})
+
 		})
-		
+
 		r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(405)
 			w.Write([]byte("wrong method"))

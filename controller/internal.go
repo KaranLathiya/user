@@ -8,6 +8,8 @@ import (
 	"user/model/request"
 	"user/model/response"
 	"user/utils"
+
+	"github.com/go-chi/chi"
 )
 
 func (c *UserController) GetUsersDetailsByIDs(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +33,7 @@ func (c *UserController) GetUsersDetailsByIDs(w http.ResponseWriter, r *http.Req
 }
 
 func (c *UserController) CreateOTPForDeleteOrganization(w http.ResponseWriter, r *http.Request) {
-	err := utils.VerifyJWT(r.Header.Get("Authorization"), "Organization", "Organization")
+	err := utils.VerifyJWT(r.Header.Get("Authorization"), "User", "User")
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
@@ -124,4 +126,21 @@ func (c *UserController) VerifyOTPForDeleteOrganization(w http.ResponseWriter, r
 		return
 	}
 	utils.SuccessMessageResponse(w, http.StatusOK, successResponse)
+}
+
+func (c *UserController) GetOrganizationCreatorDetailsByID(w http.ResponseWriter, r *http.Request) {
+	err := utils.VerifyJWT(r.Header.Get("Authorization"), "User", "User")
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
+		return
+	}
+	userID := request.UserID{
+		UserID: chi.URLParam(r, "user-id"),
+	}
+	userDetails, err := c.repo.GetCurrentUserDetailsByID(userID.UserID)
+	if err != nil {
+		error_handling.ErrorMessageResponse(w, err)
+		return
+	}
+	utils.SuccessMessageResponse(w, http.StatusOK, userDetails)
 }

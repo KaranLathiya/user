@@ -8,7 +8,6 @@ import (
 	error_handling "user/error"
 	"user/model/request"
 	"user/model/response"
-	"user/utils"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
@@ -93,7 +92,7 @@ func GetCurrentUserDetailsByID(db *sql.DB, userID string) (response.UserDetails,
 }
 
 func UpdateUserPrivacy(db *sql.DB, updateUserPrivacy request.UpdateUserPrivacy, userID string) error {
-	result, err := db.Exec("UPDATE public.users SET privacy= $1 ,updated_at = $2 WHERE id = $3 ;", updateUserPrivacy.Privacy, utils.AddMinutesToCurrentUTCTime(0), userID)
+	result, err := db.Exec("UPDATE public.users SET privacy= $1 ,updated_at = current_timestamp() WHERE id = $2 ;", updateUserPrivacy.Privacy, userID)
 	if err != nil {
 		return error_handling.InternalServerError
 	}
@@ -108,7 +107,7 @@ func UpdateUserPrivacy(db *sql.DB, updateUserPrivacy request.UpdateUserPrivacy, 
 }
 
 func UpdateBasicDetails(db *sql.DB, updateUserNameDetails request.UpdateUserNameDetails, userID string) error {
-	_, err := db.Exec("UPDATE public.users SET firstname = $1,lastname = $2, fullname = $3, username = $4, updated_at = $5 WHERE id = $6;", updateUserNameDetails.Firstname, updateUserNameDetails.Lastname, updateUserNameDetails.Firstname+" "+updateUserNameDetails.Lastname, updateUserNameDetails.Username, utils.AddMinutesToCurrentUTCTime(0), userID)
+	_, err := db.Exec("UPDATE public.users SET firstname = $1,lastname = $2, fullname = $3, username = $4, updated_at = current_timestamp() WHERE id = $5;", updateUserNameDetails.Firstname, updateUserNameDetails.Lastname, updateUserNameDetails.Firstname+" "+updateUserNameDetails.Lastname, updateUserNameDetails.Username, userID)
 	if err != nil {
 		if dbErr, ok := err.(*pq.Error); ok {
 			errCode := dbErr.Code

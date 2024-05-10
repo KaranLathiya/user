@@ -38,7 +38,7 @@ func VerifyOTP(db *sql.DB, verifyOTP request.VerifyOTP) error {
 		where = append(where, "organization_id = ?")
 		filterArgsList = append(filterArgsList, verifyOTP.OrganizationID)
 	}
-	query := fmt.Sprintf("SELECT otp, case WHEN '%s' > expires_at THEN true ELSE false END AS otp_expired FROM public.otp WHERE %v", utils.AddMinutesToCurrentUTCTime(0), strings.Join(where, " AND "))
+	query := fmt.Sprintf("SELECT otp, case WHEN current_timestamp() > expires_at THEN true ELSE false END AS otp_expired FROM public.otp WHERE %v", strings.Join(where, " AND "))
 	query = sqlx.Rebind(sqlx.DOLLAR, query)
 	fmt.Println(query)
 	rows, err := db.Query(query, filterArgsList...)

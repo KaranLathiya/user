@@ -6,7 +6,7 @@ type Config struct {
 	Database  Database   `mapstructure:",squash"`
 	SMTP      SMTP       `mapstructure:",squash"`
 	Twilio    Twilio     `mapstructure:",squash"`
-	GooglAuth GoogleAuth `mapstructure:",squash"`
+	GoogleAuth GoogleAuth `mapstructure:",squash"`
 }
 type Database struct {
 	DBName string `mapstructure:"DATABASE_NAME"`
@@ -28,5 +28,5 @@ type Twilio struct {
 type GoogleAuth struct {
 	ClientSecret string `mapstructure:"GOOGLE_AUTH_CLIENT_SECRET"`
 	ClientID     string `mapstructure:"GOOGLE_AUTH_CLIENT_ID"`
-	RedirectURL  string `mapstructure:"GOOGLE_AUTH_REDIRECT_URL"`
+	RedirectURI  string `mapstructure:"GOOGLE_AUTH_REDIRECT_URI"`
 }

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gookit/validate"
+	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 )
 
@@ -22,7 +23,7 @@ func init() {
 		// "required": "oh! the {field} is required",
 		// "email": "email is invalid",
 		"emailOrPhoneNumber": "phoneNumber and countryCode must be null with the email",
-	  })
+	})
 }
 
 // func (f UserForm) Messages() map[string]string {
@@ -88,28 +89,35 @@ var (
 	JWTErrSignatureInvalid = CreateCustomError("Invalid signature on jwt token.", http.StatusUnauthorized)
 	JWTTokenInvalid        = CreateCustomError("Invalid jwt token.", http.StatusBadRequest)
 	JWTTokenInvalidDetails = CreateCustomError("Invalid jwt token details.", http.StatusBadRequest)
+
+	NotNullConstraintError    = CreateCustomError("Some required data was left out", http.StatusBadRequest)
+	ForeignKeyConstraintError = CreateCustomError("This record can't be changed because another record refers to it", http.StatusConflict)
+	UniqueKeyConstraintError  = CreateCustomError("This record contains duplicated data that conflicts with what is already in the database", http.StatusConflict)
+	CheckConstraintError      = CreateCustomError("This record contains inconsistent or out-of-range data", http.StatusBadRequest)
 )
 
-// func DatabaseError(err error) error {
-// 	if dbErr, ok := err.(*pq.Error); ok {
-// 		errCode := dbErr.Code
-// 		switch errCode {
-// 		case "23502":
-// 			// not-null constraint violation
-// 			return CreateCustomError("Some required data was left out", 400)
+func DatabaseErrorShow(err error) error {
+	if dbErr, ok := err.(*pq.Error); ok {
+		errCode := dbErr.Code
 
-// 		case "23503":
-// 			// foreign key violation
-// 			return CreateCustomError("This record can't be changed because another record refers to it", 409)
+		switch errCode {
+		case "23502":
+			// not-null constraint violation
+			return NotNullConstraintError
 
-// 		case "23505":
-// 			// unique constraint violation
-// 			return CreateCustomError("This record contains duplicated data that conflicts with what is already in the database", 409)
+		case "23503":
+			// foreign key violation
+			return ForeignKeyConstraintError
 
-// 		case "23514":
-// 			// check constraint violation
-// 			return CreateCustomError("This record contains inconsistent or out-of-range data", 400)
-// 		}
-// 	}
-// 	return CreateCustomError("Internal server error", 500)
-// }
+		case "23505":
+			// unique constraint violation
+			return UniqueKeyConstraintError
+
+		case "23514":
+			// check constraint violation
+			return CheckConstraintError
+
+		}
+	}
+	return err
+}

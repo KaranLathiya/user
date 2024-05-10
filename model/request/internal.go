@@ -9,3 +9,7 @@ type CreateOTPForDeleteOrganization struct {
 	OwnerID        string `json:"ownerID" validate:"required"`
 	Name           string `json:"name" validate:"required"`
 }
+
+type UserID struct {
+	UserID string `json:"userID" validate:"required"`
+}

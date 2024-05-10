@@ -58,13 +58,13 @@ To login for user using email/phone number (get otp) --POST
 
     http://localhost:8000/auth/login
 
-To login for user using google account(code) (get otp) --GET
+To login for user using google account(authorization code) (get otp) --GET
 
     http://localhost:8000/auth/google/login?code=
 
 ## For Authorization code of google account 
 
-To get code using google account --GET
+To get authorization code using google account --GET
 
     http://localhost:8000/auth/google
 
