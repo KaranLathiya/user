@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	error_handling "user/error"
 	"user/model/request"
 	"user/model/response"
 
@@ -45,8 +46,9 @@ func GetUserList(db *sql.DB, userID string, userListParameter request.UserListPa
 	query = sqlx.Rebind(sqlx.DOLLAR, query)
 	rows, err := db.Query(query, filterArgsList...)
 	if err != nil {
-		return nil, err
+		return nil, error_handling.DatabaseErrorShow(err)
 	}
+	defer rows.Close()
 	var userList []response.User
 	for rows.Next() {
 		var user response.User
