@@ -9,10 +9,12 @@ import (
 	error_handling "user/error"
 )
 
-func ExternalURLCall(method string, url string, bodyDataRequest interface{}, bodyDataResponse map[string]interface{}) (map[string]interface{}, error) {
-	bodyDataByte, _ := json.MarshalIndent(bodyDataRequest, "", " ")
+func CallHttpURL(method string, url string, bodyDataRequest interface{}, bodyDataResponse map[string]interface{}) (map[string]interface{}, error) {
+	bodyDataByte, err := json.MarshalIndent(bodyDataRequest, "", " ")
+	if err != nil {
+		return nil,error_handling.MarshalError
+	}
 	var req *http.Request
-	var err error
 	if method == http.MethodGet {
 		req, err = http.NewRequest(method, url, nil)
 	} else {

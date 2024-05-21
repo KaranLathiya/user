@@ -9,7 +9,7 @@ import (
 	error_handling "user/error"
 )
 
-func CallAnotherService(jwtToken string, url string, input []byte, method string) ([]byte, error) {
+func CallHttpService(jwtToken string, url string, input []byte, method string) ([]byte, error) {
 	var buffer *bytes.Buffer
 	if input != nil {
 		buffer = bytes.NewBuffer(input)

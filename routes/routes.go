@@ -26,25 +26,28 @@ func InitializeRouter(controllers *controller.UserController) *chi.Mux {
 
 		r.Post("/otp/verify", controllers.VerifyOTP)
 
-		r.Route("/user/profile", func(r chi.Router) {
+		r.Route("/", func(r chi.Router) {
 			r.Use(middleware.Authentication)
-			r.Get("/", controllers.GetCurrentUserDetails)
-			r.Put("/privacy", controllers.UpdateUserPrivacy)
-			r.Put("/basic", controllers.UpdateBasicDetails)
-		})
 
-		r.Route("/users", func(r chi.Router) {
-			r.Use(middleware.Authentication)
-			r.Get("/", controllers.GetUserList)
-			r.Get("/id/{user-id}", controllers.GetUserDetailsByID)
-			r.Get("/username/{username}", controllers.GetUserDetailsByUsername)
-
-			r.Route("/block", func(r chi.Router) {
-				r.Get("/", controllers.BlockedUserList)
-				r.Post("/", controllers.BlockUser)
+			r.Route("/user/profile", func(r chi.Router) {
+				r.Get("/", controllers.GetCurrentUserDetails)
+				r.Put("/privacy", controllers.UpdateUserPrivacy)
+				r.Put("/basic", controllers.UpdateBasicDetails)
 			})
 
-			r.Delete("/unblock/{blocked}", controllers.UnblockUser)
+			r.Route("/users", func(r chi.Router) {
+				r.Get("/", controllers.GetUserList)
+				r.Get("/id/{user-id}", controllers.GetUserDetailsByID)
+				r.Get("/username/{username}", controllers.GetUserDetailsByUsername)
+
+				r.Route("/block", func(r chi.Router) {
+					r.Get("/", controllers.BlockedUserList)
+					r.Post("/", controllers.BlockUser)
+				})
+
+				r.Delete("/unblock/{blocked}", controllers.UnblockUser)
+
+			})
 
 		})
 

@@ -114,7 +114,8 @@ func (c *UserController) VerifyOTPForDeleteOrganization(w http.ResponseWriter, r
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
-	body, err := utils.CallAnotherService(jwtToken, constant.ORGANIZATION_SERVICE_BASE_URL+"internal/organization/"+verifyOTPForDeleteOrganization.OrganizationID, nil, http.MethodDelete)
+	// Organization service call for delete organization
+	body, err := utils.CallHttpService(jwtToken, constant.ORGANIZATION_SERVICE_BASE_URL+"internal/organization/"+verifyOTPForDeleteOrganization.OrganizationID, nil, http.MethodDelete)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return

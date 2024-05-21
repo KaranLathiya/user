@@ -33,14 +33,14 @@ func (c *UserController) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 
 	var bodyDataResponse map[string]interface{}
 
-	bodyDataResponse, err := utils.ExternalURLCall(http.MethodPost, constant.GOOGLE_ACCESS_TOKEN_REQUEST_URL, googleAccessTokenRequest, bodyDataResponse)
+	bodyDataResponse, err := utils.CallHttpURL(http.MethodPost, constant.GOOGLE_ACCESS_TOKEN_REQUEST_URL, googleAccessTokenRequest, bodyDataResponse)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return
 	}
 	accessToken := bodyDataResponse["access_token"]
 	fmt.Println(accessToken)
-	bodyDataResponse, err = utils.ExternalURLCall(http.MethodGet, constant.GOOGLE_INFO_REQUEST_URL+accessToken.(string), nil, bodyDataResponse)
+	bodyDataResponse, err = utils.CallHttpURL(http.MethodGet, constant.GOOGLE_INFO_REQUEST_URL+accessToken.(string), nil, bodyDataResponse)
 	if err != nil {
 		error_handling.ErrorMessageResponse(w, err)
 		return

@@ -24,7 +24,7 @@ func UserExistence(db *sql.DB, email *string, phoneNumber *string) (bool, error)
 	var id string
 	err := db.QueryRow(query, filterArgsList...).Scan(&id)
 	if err != nil {
-		if err.Error() == "sql: no rows in result set" {
+		if err == sql.ErrNoRows {
 			return false, nil
 		}
 		return false, error_handling.DatabaseErrorShow(err)
