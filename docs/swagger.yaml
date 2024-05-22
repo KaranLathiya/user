@@ -1,0 +1,1069 @@
+definitions:
+  error.CustomError:
+    properties:
+      errorMessage:
+        type: string
+      invalidData:
+        items:
+          $ref: '#/definitions/error.InvalidData'
+        type: array
+      statusCode:
+        type: integer
+    required:
+    - errorMessage
+    - statusCode
+    type: object
+  error.InvalidData:
+    properties:
+      error:
+        additionalProperties:
+          type: string
+        type: object
+      field:
+        type: string
+    type: object
+  request.BlockUser:
+    properties:
+      blockedUser:
+        type: string
+    required:
+    - blockedUser
+    type: object
+  request.CreateOTPForDeleteOrganization:
+    properties:
+      name:
+        type: string
+      organizationID:
+        type: string
+      ownerID:
+        type: string
+    required:
+    - name
+    - organizationID
+    - ownerID
+    type: object
+  request.Login:
+    properties:
+      countryCode:
+        type: string
+      email:
+        type: string
+      loginType:
+        type: string
+      phoneNumber:
+        type: string
+    type: object
+  request.Signup:
+    properties:
+      countryCode:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+      loginType:
+        type: string
+      phoneNumber:
+        type: string
+    type: object
+  request.UpdateUserNameDetails:
+    properties:
+      firstname:
+        type: string
+      lastname:
+        type: string
+      username:
+        type: string
+    type: object
+  request.UserIDs:
+    properties:
+      userIDs:
+        items:
+          type: string
+        type: array
+    required:
+    - userIDs
+    type: object
+  request.VerifyOTP:
+    properties:
+      countryCode:
+        type: string
+      email:
+        type: string
+      eventType:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+      organizationID:
+        type: string
+      otp:
+        type: string
+      phoneNumber:
+        type: string
+      signupMode:
+        type: string
+    type: object
+  request.VerifyOTPForDeleteOrganization:
+    properties:
+      eventType:
+        type: string
+      organizationID:
+        type: string
+      otp:
+        type: string
+    required:
+    - organizationID
+    type: object
+  response.BlockUserDetails:
+    properties:
+      blockedAt:
+        type: string
+      blockedUser:
+        type: string
+      fullname:
+        type: string
+      id:
+        type: string
+    required:
+    - blockedAt
+    - blockedUser
+    - fullname
+    - id
+    type: object
+  response.GoogleUserInfo:
+    properties:
+      email:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+      message:
+        type: string
+    required:
+    - email
+    - firstname
+    - lastname
+    type: object
+  response.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  response.User:
+    properties:
+      countryCode:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      fullname:
+        type: string
+      lastname:
+        type: string
+      phoneNumber:
+        type: string
+      userID:
+        type: string
+      username:
+        type: string
+    type: object
+  response.UserDetails:
+    properties:
+      countryCode:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      fullname:
+        type: string
+      lastname:
+        type: string
+      phoneNumber:
+        type: string
+      privacy:
+        type: string
+      updatedAt:
+        type: string
+      userID:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8000/
+info:
+  contact: {}
+  description: User service for registration/login of user. It allows to block/unblock
+    other users and update their profiles.
+  title: User-Service API
+  version: "1.0"
+paths:
+  /auth/google/:
+    get:
+      consumes:
+      - application/json
+      description: googleAuth link for getting code (authorization code)
+      operationId: googleAuth-link
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      summary: googleAuth link
+      tags:
+      - UserAuth
+  /auth/google/login:
+    get:
+      consumes:
+      - application/json
+      description: get otp for login of user using google account
+      operationId: user-google-login
+      parameters:
+      - description: pass the code that we get through the googleAuth link
+        in: query
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.GoogleUserInfo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      summary: user google login
+      tags:
+      - UserAuth
+  /auth/login/:
+    post:
+      consumes:
+      - application/json
+      description: get otp for login of user in registered email/phoneNumber
+      operationId: user-login
+      parameters:
+      - description: input for user login
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      summary: user login
+      tags:
+      - UserAuth
+  /auth/signup/:
+    post:
+      consumes:
+      - application/json
+      description: new user signup using email/phoneNumber
+      operationId: user-signup
+      parameters:
+      - description: input for user signup
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.Signup'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      summary: user signup
+      tags:
+      - UserAuth
+  /internal/user/organization/delete/otp/:
+    post:
+      consumes:
+      - application/json
+      description: get otp for deleting organization in owner's registered email/phonenumber
+      operationId: otp-for-delete-organization
+      parameters:
+      - description: input for get otp for deleting organization
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateOTPForDeleteOrganization'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      security:
+      - jwtAuth: []
+      summary: get otp for deleting organization
+      tags:
+      - PublicAPI
+  /internal/user/organization/delete/otp/verify:
+    post:
+      consumes:
+      - application/json
+      description: verify otp for deleting organization
+      operationId: verify-otp-for-delete-organization
+      parameters:
+      - description: input for verify otp for deleting organization
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.VerifyOTPForDeleteOrganization'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      summary: verify otp for deleting organization
+      tags:
+      - PublicAPI
+  /internal/users/details/:
+    post:
+      consumes:
+      - application/json
+      description: get users details by userIDs
+      operationId: users-details-by-userIDs
+      parameters:
+      - description: input for get users details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserIDs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/response.UserDetails'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      security:
+      - jwtAuth: []
+      summary: get users details
+      tags:
+      - PublicAPI
+  /internal/users/details/{user-id}:
+    get:
+      consumes:
+      - application/json
+      description: organization creator details by ID
+      operationId: organization-creator-details
+      parameters:
+      - description: user-id
+        in: path
+        name: user-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      security:
+      - jwtAuth: []
+      summary: organization creator details
+      tags:
+      - PublicAPI
+  /otp/verify/:
+    post:
+      consumes:
+      - application/json
+      description: verify otp for login/signup
+      operationId: verify-otp
+      parameters:
+      - description: input for verify otp
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.VerifyOTP'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      summary: verify otp
+      tags:
+      - UserAuth
+  /user/profile/:
+    get:
+      consumes:
+      - application/json
+      description: get current user details by userID
+      operationId: current-user-details
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UserDetails'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      security:
+      - UserIDAuth: []
+      summary: current user details
+      tags:
+      - UserDetails
+  /user/profile/basic:
+    put:
+      consumes:
+      - application/json
+      description: update user basic details like firstname, lastname, username
+      operationId: update-user-basic
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/request.UpdateUserNameDetails'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      security:
+      - UserIDAuth: []
+      summary: update user basic details
+      tags:
+      - UserDetails
+  /user/profile/privacy:
+    put:
+      consumes:
+      - application/json
+      description: update user privacy
+      operationId: update-user-privacy
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UserDetails'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      security:
+      - UserIDAuth: []
+      summary: update user privacy
+      tags:
+      - UserDetails
+  /users/:
+    get:
+      consumes:
+      - application/json
+      description: get userList using different sorting & sorting
+      operationId: user-list
+      parameters:
+      - description: "10"
+        in: query
+        name: limit
+        type: integer
+      - description: "0"
+        in: query
+        name: offset
+        type: integer
+      - description: ' '
+        in: query
+        name: email
+        type: string
+      - description: ' '
+        in: query
+        name: fullname
+        type: string
+      - description: ' '
+        in: query
+        name: phonenumber
+        type: string
+      - description: pass the value asc or desc
+        in: query
+        name: sorting
+        type: string
+      - description: pass the value fullname or date
+        in: query
+        name: filter
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      security:
+      - UserIDAuth: []
+      summary: get userList
+      tags:
+      - User
+  /users/block:
+    get:
+      consumes:
+      - application/json
+      description: get list of all blocked users
+      operationId: user-blockList
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.BlockUserDetails'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      security:
+      - UserIDAuth: []
+      summary: block userList
+      tags:
+      - BlockActions
+  /users/block/:
+    post:
+      consumes:
+      - application/json
+      description: block another user to hide your details
+      operationId: user-block
+      parameters:
+      - description: The input for user login
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.BlockUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      security:
+      - UserIDAuth: []
+      summary: block another user
+      tags:
+      - BlockActions
+  /users/id/{user-id}:
+    get:
+      consumes:
+      - application/json
+      description: get another user details by userID
+      operationId: user-details-by-userid
+      parameters:
+      - description: user-id
+        in: path
+        name: user-id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UserDetails'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      security:
+      - UserIDAuth: []
+      summary: user details
+      tags:
+      - UserDetails
+  /users/unblock/{blocked}:
+    delete:
+      consumes:
+      - application/json
+      description: unblock another user to show your details
+      operationId: user-unblock
+      parameters:
+      - description: blocked
+        in: path
+        name: blocked
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      security:
+      - UserIDAuth: []
+      summary: unblock another user
+      tags:
+      - BlockActions
+  /users/username/{username}:
+    get:
+      consumes:
+      - application/json
+      description: get another user details by username
+      operationId: user-details-by-username
+      parameters:
+      - description: username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.UserDetails'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/error.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/error.CustomError'
+      security:
+      - UserIDAuth: []
+      summary: user details
+      tags:
+      - UserDetails
+schemes:
+- http
+securityDefinitions:
+  UserIDAuth:
+    in: header
+    name: Auth-user
+    type: apiKey
+  jwtAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
+tags:
+- description: User signup, login, google login
+  name: UserAuth
+- description: User details update, fetch
+  name: UserDetails
+- description: Block or unblock another user
+  name: BlockActions
+- description: get all users
+  name: User
+- description: inter service apis
+  name: PublicAPI

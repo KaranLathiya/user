@@ -46,8 +46,8 @@ type CustomError struct {
 }
 
 type InvalidData struct {
-	Field string
-	Error map[string]string
+	Field string            `json:"field" `
+	Error map[string]string `json:"error" `
 }
 
 func (c CustomError) Error() string {

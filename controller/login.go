@@ -9,6 +9,23 @@ import (
 	"user/utils"
 )
 
+// User Login example
+//
+// @tags UserAuth
+//	@Summary		user login
+//	@Description	get otp for login of user in registered email/phoneNumber
+//	@ID				user-login
+//	@Accept			json
+//	@Produce		json
+// @Param request body request.Login true "input for user login"
+//	@Success		200		{object}	response.SuccessResponse "OK"
+//	@Failure		400		{object}	error.CustomError	"Bad Request"
+//	@Failure		401		{object}	error.CustomError	"Unauthorized"
+//	@Failure		404		{object}	error.CustomError	"Not Found"
+//	@Failure		405		{object}	error.CustomError	"Method Not Allowed"
+//	@Failure		409		{object}	error.CustomError	"Conflict"
+//	@Failure		500		{object}	error.CustomError	"Internal Server Error"
+//	@Router			/auth/login/ [post]
 func (c *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	var login request.Login
 	err := utils.BodyReadAndValidate(r.Body, &login, nil)

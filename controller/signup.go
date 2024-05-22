@@ -9,6 +9,23 @@ import (
 	"user/utils"
 )
 
+// User Signup example
+//
+// @tags UserAuth
+//	@Summary		user signup
+//	@Description	new user signup using email/phoneNumber 
+//	@ID				user-signup
+//	@Accept			json
+//	@Produce		json
+// @Param request body request.Signup true "input for user signup"
+//	@Success		200		{object}	response.SuccessResponse "OK"
+//	@Failure		400		{object}	error.CustomError	"Bad Request"
+//	@Failure		401		{object}	error.CustomError	"Unauthorized"
+//	@Failure		404		{object}	error.CustomError	"Not Found"
+//	@Failure		405		{object}	error.CustomError	"Method Not Allowed"
+//	@Failure		409		{object}	error.CustomError	"Conflict"
+//	@Failure		500		{object}	error.CustomError	"Internal Server Error"
+//	@Router			/auth/signup/ [post]
 func (c *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 	var signup request.Signup
 	err := utils.BodyReadAndValidate(r.Body, &signup, nil)

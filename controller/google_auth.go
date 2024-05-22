@@ -13,6 +13,17 @@ import (
 	error_handling "user/error"
 )
 
+// Google Auth link example
+//
+// @tags UserAuth
+//	@Summary		googleAuth link 
+//	@Description	googleAuth link for getting code (authorization code)
+//	@ID				googleAuth-link
+//	@Accept			json
+//	@Produce		json
+//	@Success		200		{object}	response.SuccessResponse "OK"
+//	@Failure		405		{object}	error.CustomError	"Method Not Allowed"
+//	@Router			/auth/google/ [get]
 func (c *UserController) GoogleAuth(w http.ResponseWriter, r *http.Request) {
 	scopes := "https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/userinfo.email"
 	authURL := constant.GOOGLE_AUTH_URL+"?scope="+scopes+"&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=" + config.ConfigVal.GoogleAuth.RedirectURI + "&client_id=" + config.ConfigVal.GoogleAuth.ClientID + ""
@@ -20,6 +31,23 @@ func (c *UserController) GoogleAuth(w http.ResponseWriter, r *http.Request) {
 	utils.SuccessMessageResponse(w, http.StatusOK, googleAuthURL)
 }
 
+// Google Login example
+//
+// @tags UserAuth
+//	@Summary		user google login
+//	@Description	get otp for login of user using google account
+//	@ID				user-google-login
+//	@Accept			json
+//	@Produce		json
+// @Param   code     query     string     true  "pass the code that we get through the googleAuth link"   
+//	@Success		200		{object}	response.GoogleUserInfo "OK"
+//	@Failure		400		{object}	error.CustomError	"Bad Request"
+//	@Failure		401		{object}	error.CustomError	"Unauthorized"
+//	@Failure		404		{object}	error.CustomError	"Not Found"
+//	@Failure		405		{object}	error.CustomError	"Method Not Allowed"
+//	@Failure		409		{object}	error.CustomError	"Conflict"
+//	@Failure		500		{object}	error.CustomError	"Internal Server Error"
+//	@Router			/auth/google/login [get]
 func (c *UserController) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 	code := r.FormValue("code")
 	code = strings.ReplaceAll(code, "%2F", "/")
