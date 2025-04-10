@@ -9,7 +9,7 @@ import (
 )
 
 func Connect() *sql.DB {
-	connection_string := "postgresql://" + config.ConfigVal.Database.DBUser + "@localhost:26257/" + config.ConfigVal.Database.DBName + "?sslmode=disable"
+	connection_string := "postgresql://" + config.ConfigVal.Database.DBUser + "@" + config.ConfigVal.Database.DBHost +":26257/" + config.ConfigVal.Database.DBName + "?sslmode=disable"
 	db, err := sql.Open("postgres", connection_string)
 	if err != nil {
 		log.Fatalf("Database Connection err: %v", err)

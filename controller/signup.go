@@ -71,10 +71,6 @@ func (c *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 	} else {
 		go utils.SendOTPInPhoneNumber(*signup.CountryCode, *signup.PhoneNumber, otp, subject)
 	}
-	if err != nil {
-		error_handling.ErrorMessageResponse(w, err)
-		return
-	}
 	successResponse := response.SuccessResponse{Message: constant.OTP_SENT}
 	utils.SuccessMessageResponse(w, http.StatusOK, successResponse)
 }

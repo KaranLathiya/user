@@ -11,6 +11,7 @@ type Config struct {
 type Database struct {
 	DBName string `mapstructure:"DATABASE_NAME"`
 	DBUser string `mapstructure:"DATABASE_USER"`
+	DBHost string `mapstructure:"DATABASE_HOST"`
 }
 type SMTP struct {
 	EmailFrom     string `mapstructure:"SMTP_EMAIL_FROM"`

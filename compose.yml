@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+
+  cockroachdb:
+    image: cockroachdb/cockroach:latest-v23.2
+    container_name: cockroachdb-user
+    command: start-single-node --insecure
+    ports:
+      - "26257:26257"
+    networks:
+      - user-network
+
+  usersvc:
+    image: usersvc:latest
+    build:
+      context: .
+    container_name: usersvc
+    depends_on:
+      - dbmate
+    environment:
+      - WAIT_HOSTS=cockroachdb:26257
+    networks:
+      - user-network
+    ports:
+      - "8000:8000"
+
+  dbmate:
+    image: amacneil/dbmate
+    container_name: dbmate
+    depends_on:
+      - cockroachdb
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5 &&
+      dbmate --wait --migrations-dir=/db/migrations up
+      "
+    environment:
+      - DATABASE_URL=postgres://root@cockroachdb:26257/user?sslmode=disable
+    volumes:
+      - ./db/migrations:/db/migrations
+    networks:
+      - user-network
+
+networks:
+  user-network:
+    driver: bridge
