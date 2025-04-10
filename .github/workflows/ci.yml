@@ -24,7 +24,7 @@ jobs:
       #   run: go test ./...
 
       - name: Build Binary
-        run: go build -o main .
+        run: go build -o main ./cmd
 
   docker:
     runs-on: ubuntu-latest
