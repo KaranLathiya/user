@@ -23,9 +23,10 @@ COPY --from=wait /wait /wait
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main /cmd/main
 
-COPY --from=builder /app/config/.env /config/.env
+# for local .env set on docker
+# COPY --from=builder /app/config/.env /config/.env
 
-RUN cat /config/.env
+# RUN cat /config/.env
 
 EXPOSE 8000
 
